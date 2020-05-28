@@ -1,0 +1,182 @@
+
+\documentclass[12pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+ 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+ 
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+\title{Pricing Notes}%replace X with the appropriate number
+\author{GL\\ %replace with your name
+} %if necessary, replace with your course title
+ 
+\maketitle
+ 
+% \begin{theorem}{x.yz} %You can use theorem, exercise, problem, or question here.  Modify x.yz to be whatever number you are proving
+% Delete this text and write theorem statement here.
+% \end{theorem}
+ 
+% \begin{proof} %You can also use solution in place of proof.
+% Blah, blah, blah.  Here is an example of the \texttt{align} environment:
+%Note 1: The * tells LaTeX not to number the lines.  If you remove the *, be sure to remove it below, too.
+%Note 2: Inside the align environment, you do not want to use $-signs.  The reason for this is that this is already a math environment. This is why we have to include \text{} around any text inside the align environment.
+
+
+\subsection{ Preliminary definitions} 
+\subsubsection{Default and Prepayment probabilities:}
+$ \forall t \in \{1,2,...T\}$
+\[ % <-- step a
+\begin{array}{rr} % <-- steps b and c
+   p_p(t)  :&  \mbox{
+   Probability that the loan will prepay at time t given that it has survived to that point } \\
+   p_p(t)  : &  \mbox{
+   Probability that the loan will default at time t given that it has survived to that point
+   }
+\end{array} \noindent% <-- step e
+\] % <-- step e
+
+ \subsubsection{Survival function:}
+$S(t)$ :   Probability that a loan survives until period t 
+\begin{align}
+S(t) & = \Pi_{s=1}^t (1-p_d(s) - p_p(s)) \\
+ & = (1-p_d(1) - p_p(1))\times(1-p_d(2) - p_p(2))\times...\times(1-p_d(t) - p_p(t))
+\end{align}
+
+\subsubsection{Balance function: }
+The Current Balance function $B(t)$ is the remaining balance left at time $t-1$ for a loan with principal B=B(1). For non conventional loan payments this function might not have a closed form solution. 
+-  ** Constant installments: ** The remaining balance at time $t$ for a loan with pricincipal (Balance at t=0) B is given by 
+\begin{align}
+B(t)&=B\frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1}
+\end{align}
+\begin{align}
+I(t)&=r\times B(t)
+\end{align}
+The acute reader will notice that the definition of $B(t)$, in terms of the remaining balance left at time $t-1$ , was given so that we can state such a simple equation for $I(t)$.
+
+
+\subsubsection{Constant amortization: } The remaining balance at time $t$ for a loan with pricincipal (Balance at t=0) B is given by:
+
+\begin{align}
+B(t)&=B \times (1-\frac{t-1}{T})
+\end{align}
+
+
+### 2) Terms included in the incremental profit
+#### ** Interest on loans: **
+\begin{align}
+LI(t) = S(t)B(t)r
+\end{align}
+#### ** Cost of Funds: **
+\begin{align}
+COF(t) = S_c(t)B_c(t)r_c
+\end{align}
+Where: 
+\begin{align}
+S_c(t)= \Pi_{s=0}^t [1- p_p(s)-(1-LGD(s))p_d(s) ]
+\end{align}
+
+#### ** Equity Benefit: **
+\begin{align}
+EB(t) = \alpha S(t)B(t) r_c
+\end{align}
+
+#### ** Fees Additional Source of revenue: **
+\begin{align}
+F(t) = f S(t)
+\end{align}
+
+#### ** Servicing Costs: **
+\begin{align}
+SC(t) =  \sigma S(t)
+\end{align}
+
+#### ** Loss from Default: **
+\begin{align}
+EL(t) =  p_d(t)LGD(t)S(t)B(t) 
+\end{align}
+\begin{align}
+C(t) = c\times p_d(t) S(t)
+\end{align}
+
+#### ** Equity Capital Charge: **
+\begin{align}
+ EC(t) =  \alpha S(t)B(t) r_e
+\end{align}
+
+
+## ** 3) Incremental Profit Definition: **
+The net present value is given by:
+
+\begin{align}
+NPV(x(t),r,T)=\sum_{t=1}^T \frac{x(t)}{(1+r)^t}
+\end{align}
+| Element                 | Notation             | Calculation  |
+|:------------------------ |:------------------|: -----|
+| Lending Interest     | $LI$ | $NVP(LI(t),r_d,T)$ |
+| Cost of Funds     | $COF$      |   $NVP(COF(t),r_d,T)$ |
+| Equity benefit | $EB$      |    $NVP(EB(t),r_d,T)$ |
+| Fees | $F$      |    $NVP(F(t),r_d,T)$ |
+| Ancillary profit | $A$      |    - |
+| Origination cost | $OC$      |    - |
+| Commision | $COM$      |    - |
+| Servicing Costs | $SC$      |    $NVP(SC(t),r_d,T)$ |
+| Expected Loss| $EL$      |    $NVP(EL(t),r_d,T)$ |
+| Collection costs| $C$      |    $NVP(C(t),r_d,T)$ |
+| Equity charge| $EC$      |    $NVP(EC(t),r_d,T)$ |
+
+# 
+
+| Element                 | Notation             | Calculation  |
+|:------------------------ |:------------------|: -----|
+| Net Interest Income  | $NII$      |    $LI-COF+EB$ |
+| Total Income  | $TI$      |    $NII+A+F$ |
+| Net Income before tax | $NIBT$      |    $TI-OC-COM-SC-LD-C$ |
+| Net Income after tax | $NIAT$      |    $(1-\tau)\times NIBT$ |
+| Incremental profit | $IP$      |    $NIAT-EC$ |
+
+
+
+
+
+% \begin{align*}
+
+% \end{align*}
+% \end{proof}
+% \begin{equation}
+%     \alpha+\beta
+% \end{equation} 
+% \begin{theorem}{x.yz}
+% Let $n\in \Z$.  Then yada yada.
+% \end{theorem}
+ 
+% \begin{proof}
+% Blah, blah, blah.  I'm so smart.
+% \end{proof}
+ 
+% --------------------------------------------------------------
+%     You don't have to mess with anything below this line.
+% --------------------------------------------------------------
+ 
+\end{document}
