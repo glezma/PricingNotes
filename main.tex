@@ -1,5 +1,5 @@
 
-\documentclass[12pt]{article}
+\documentclass[12pt]{book}
  
 \usepackage[margin=1in]{geometry} 
 \usepackage{amsmath,amsthm,amssymb}
@@ -28,8 +28,8 @@
 %                         Start here
 % --------------------------------------------------------------
  
-\title{Pricing Notes}%replace X with the appropriate number
-\author{GL\\ %replace with your name
+\title{Pricing Modeling Notes}%replace X with the appropriate number
+\author{\\ %replace with your name
 } %if necessary, replace with your course title
  
 \maketitle
@@ -43,9 +43,9 @@
 %Note 1: The * tells LaTeX not to number the lines.  If you remove the *, be sure to remove it below, too.
 %Note 2: Inside the align environment, you do not want to use $-signs.  The reason for this is that this is already a math environment. This is why we have to include \text{} around any text inside the align environment.
 
-
-\subsection{ Preliminary definitions} 
-\subsubsection{Default and Prepayment probabilities:}
+\chapter{Loan Pricing}
+\section{ Preliminary definitions} 
+\subsection{Default and Prepayment probabilities:}
 $ \forall t \in \{1,2,...T\}$
 \[ % <-- step a
 \begin{array}{rr} % <-- steps b and c
@@ -57,16 +57,18 @@ $ \forall t \in \{1,2,...T\}$
 \end{array} \noindent% <-- step e
 \] % <-- step e
 
- \subsubsection{Survival function:}
+ \subsection{Survival function:}
 $S(t)$ :   Probability that a loan survives until period t 
 \begin{align}
 S(t) & = \Pi_{s=1}^t (1-p_d(s) - p_p(s)) \\
- & = (1-p_d(1) - p_p(1))\times(1-p_d(2) - p_p(2))\times...\times(1-p_d(t) - p_p(t))
+ & = (1-p_d(1) - p_p(1))\times(1-p_d(2) - p_p(2))\times...\times(1-p_d(t) - p_p(t)) \nonumber
 \end{align}
 
-\subsubsection{Balance function: }
+\subsection{Balance function: }
 The Current Balance function $B(t)$ is the remaining balance left at time $t-1$ for a loan with principal B=B(1). For non conventional loan payments this function might not have a closed form solution. 
--  ** Constant installments: ** The remaining balance at time $t$ for a loan with pricincipal (Balance at t=0) B is given by 
+
+
+\paragraph{Constant installments:} The remaining balance at time $t$ for a loan with principal (Balance at t=0) B is given by 
 \begin{align}
 B(t)&=B\frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1}
 \end{align}
@@ -76,19 +78,19 @@ I(t)&=r\times B(t)
 The acute reader will notice that the definition of $B(t)$, in terms of the remaining balance left at time $t-1$ , was given so that we can state such a simple equation for $I(t)$.
 
 
-\subsubsection{Constant amortization: } The remaining balance at time $t$ for a loan with pricincipal (Balance at t=0) B is given by:
+\paragraph{Constant amortization: } The remaining balance at time $t$ for a loan with pricincipal (Balance at t=0) B is given by:
 
 \begin{align}
 B(t)&=B \times (1-\frac{t-1}{T})
 \end{align}
 
 
-### 2) Terms included in the incremental profit
-#### ** Interest on loans: **
+\section{ Terms included in the incremental profit (CLV)}
+\subsection{ Interest on loans: }
 \begin{align}
 LI(t) = S(t)B(t)r
 \end{align}
-#### ** Cost of Funds: **
+\subsection{  Cost of Funds: }
 \begin{align}
 COF(t) = S_c(t)B_c(t)r_c
 \end{align}
@@ -97,86 +99,175 @@ Where:
 S_c(t)= \Pi_{s=0}^t [1- p_p(s)-(1-LGD(s))p_d(s) ]
 \end{align}
 
-#### ** Equity Benefit: **
+\subsection{ Equity Benefit (Captal Rebate): }
 \begin{align}
 EB(t) = \alpha S(t)B(t) r_c
 \end{align}
 
-#### ** Fees Additional Source of revenue: **
+\subsection{ Fees Additional Source of revenue: }
 \begin{align}
 F(t) = f S(t)
 \end{align}
 
-#### ** Servicing Costs: **
+\subsection{ Servicing Costs: }
 \begin{align}
 SC(t) =  \sigma S(t)
 \end{align}
 
-#### ** Loss from Default: **
+\subsection{ Loss from Default: }
 \begin{align}
 EL(t) =  p_d(t)LGD(t)S(t)B(t) 
 \end{align}
+\subsection{Recovery costs}
 \begin{align}
 C(t) = c\times p_d(t) S(t)
 \end{align}
 
-#### ** Equity Capital Charge: **
+\subsection{ Equity Capital Charge: }
 \begin{align}
  EC(t) =  \alpha S(t)B(t) r_e
 \end{align}
 
 
-## ** 3) Incremental Profit Definition: **
+\section{ Incremental Profit Definition (CLV): }
 The net present value is given by:
 
 \begin{align}
 NPV(x(t),r,T)=\sum_{t=1}^T \frac{x(t)}{(1+r)^t}
 \end{align}
-| Element                 | Notation             | Calculation  |
-|:------------------------ |:------------------|: -----|
-| Lending Interest     | $LI$ | $NVP(LI(t),r_d,T)$ |
-| Cost of Funds     | $COF$      |   $NVP(COF(t),r_d,T)$ |
-| Equity benefit | $EB$      |    $NVP(EB(t),r_d,T)$ |
-| Fees | $F$      |    $NVP(F(t),r_d,T)$ |
-| Ancillary profit | $A$      |    - |
-| Origination cost | $OC$      |    - |
-| Commision | $COM$      |    - |
-| Servicing Costs | $SC$      |    $NVP(SC(t),r_d,T)$ |
-| Expected Loss| $EL$      |    $NVP(EL(t),r_d,T)$ |
-| Collection costs| $C$      |    $NVP(C(t),r_d,T)$ |
-| Equity charge| $EC$      |    $NVP(EC(t),r_d,T)$ |
 
-# 
+\renewcommand{\arraystretch}{1.5} % <-- optional a
+\begin{center} % <-- optional b
+\[ % <-- step a
+\begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
+\mbox{Element} & \mbox{Notation} & \mbox{Calculation}\\ \hline
+\mbox{ Lending Interest }  & LI & NVP(LI(t),r_d,T)\\
+\mbox{Cost of Funds   }  & COF & NVP(COF(t),r_d,T)\\
+\mbox{Equity benefit }  & EB & NVP(EB(t),r_d,T)\\
+\mbox{Fees }  & LI & NVP(F(t),r_d,T)\\
+\mbox{ Ancillary profit }  & A & -\\
+\mbox{Origination cost}  & OC & -\\
+\mbox{ Commision  }  & COM & -\\
+\mbox{ Servicing Costs}  & SC & NVP(SC(t),r_d,T)\\
+\mbox{ Expected Loss }  & EL & NVP(EL(t),r_d,T)\\
+\mbox{ Collection costs }  & C & NVP(C(t),r_d,T)\\
+\mbox{ Equity charge}  & EC & NVP(EC(t),r_d,T)\\
 
-| Element                 | Notation             | Calculation  |
-|:------------------------ |:------------------|: -----|
-| Net Interest Income  | $NII$      |    $LI-COF+EB$ |
-| Total Income  | $TI$      |    $NII+A+F$ |
-| Net Income before tax | $NIBT$      |    $TI-OC-COM-SC-LD-C$ |
-| Net Income after tax | $NIAT$      |    $(1-\tau)\times NIBT$ |
-| Incremental profit | $IP$      |    $NIAT-EC$ |
+\hline
+\end{array} % <-- step e
+\] % <-- step e
+\end{center}
+
+\renewcommand{\arraystretch}{1.5} % <-- optional a
+\begin{center} % <-- optional b
+\[ % <-- step a
+\begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
+\mbox{Element} & \mbox{Notation} & \mbox{Calculation}\\ \hline
+\mbox{ Net Interest Income }  & NII & LI-COF+EB\\
+\mbox{Total Income  }  & TI & NII+A+F\\
+\mbox{Net Income before tax}  & NIBT & TI-OC-COM-SC-LD-C\\
+\mbox{Net Income after tax }  & NIAT&(1-\tau)\times NIBT \\
+\mbox{ Incremental profit  }  & IP & NIAT-EC\\
+
+\hline
+\end{array} % <-- step e
+\] % <-- step e
+\end{center}
+
+\subsection{ Incremental Profit Function: }
+Define the incremental profit function as:
+\begin{align}
+\pi(p)=IP(p)
+\end{align}
+
+\section{Willingness to Pay (WTP): }
+\subsection{The Price-Response Function}
+Each price-response function specifies the demand that the lender would experience at each pricie, which will depend on:
+\begin{enumerate}
+    \item Total number of clientes interested in the loan
+    \item Number of applicant clients
+    \item The number of applicat the lender deems creditworthy and quotes a price.
+    \item Number of accepted applicants who would achieve a positive surplus from taking the loan from the lender at the offered price.
+    \item Number of accepted applicants who \textbf{ take up} the offered loan.
+\end{enumerate}
+In most lending markets, the final price is not known to the client at the time she applies for the loan so we assume that the number of clients who apply for a loan is not influenced by the price.
+\begin{align}
+d(p)=D\overline{F}(p)
+\end{align}
+$d(p)$ is the number of the loans offered by a lender that would be taken up at the price p. $D$ is the number of successful applicants for the loan, and $\overline{F}(p)$ is the take-up rate, which is defined as the fraction of successful applicants who will take up the loan at price $p$
+\begin{align}
+d(p)=D\overline{F}(p)
+\end{align}
+\begin{align}
+\overline{F}(p)=\int^\infty_p f(w)dw
+\end{align}
+\subsection{Segmented vs Join Estimation}
+For $n$ segments, the segmented estimation assumes each segments has its own demand function so we need to estimate $2n$ parameters.
+\begin{align}
+\overline{F_i}(p_i)=\frac{e^{a_i+b_i p_i}}{1+e^{a_i+b_i p_i}}
+\end{align}
+
+For $n$ segments, the join estimation assume we can estimate one single price price responce function that includes all explanatory variables within it (including price)
+\begin{align}
+\overline{F}(p_i,a,b,\theta,x_i)=\frac{e^{a+b p_i+\theta^T x_i}}{1+e^{a+b p_i+\theta^T x_i}}
+\end{align}
+
+\section{Price optimization (CLV+WTP): }
+\subsection{Price optimization without constraints}
+\begin{align}
+p^*= \arg \max_p \sum_{i=1}^N D_i\overline{F}_i(p_i)\pi(p)
+\end{align}
+
+\subsection{Price optimization with competing objectives: The efficient Frontier}
+
+\begin{align}
+p^*_j= \arg \max_p \sum_{i=1}^N D_i\overline{F}_i(p_i)\pi(p)
+\end{align}
+\begin{center}
+    $s.t.$
+\end{center}
+\begin{align}
+\sum_{i=1}^N D_i\overline{F}_i(p_i) =q_j,& \forall j
+\end{align}
+
+
+\chapter{Survival models}
+\subsection{Common survival setup}
+Let T be a positive random variable in $1,2,3,...$
+\begin{align}
+    S(t)=&P(T>t) \\
+    F(t)=&1-S(t)=1-P(T>t)=P(T\leq t)
+\end{align}
+\subsection{Survival setup in presence of competing risks}
+
+We define the cumulative incidence function as:
+\begin{align}
+    CIF_k(t)=&P(T\leq t,D=k) \\
+    &=\sum_k P(T \leq t,D=k) = P(T \leq t)
+\end{align}
+In order to see what is the relationship between the CIF function and the usual conditional probability of default (death) we state the definition of conditional probability and use the fact that the event $T=t+1 \wedge T>t$ is equal to $T=t+1$ standalone.
+\begin{align}
+    p_k(t+1)&=p(T=t+1,D=k/T>t)=\frac{P(T=t+1,D=k)}{P(T>t)}\\
+    &= \frac{ P(T \leq t+1,D=k)-P(T\leq t,D=k)}{
+    1-\sum_k P(T \leq t, D=k)
+    }
+\end{align}
+
+As an example lets consider that $D=1$ represents default
+and $D=2$ represents prepayment then the conditional probabilities of default and prepayment are given by:
+\begin{align}
+p_d(t+1)&= \frac{CIF_d(t+1)-CIF_d(t)  }{
+1- CIF_d(t)-CIF_p(t)}  
+\end{align}
 
 
 
 
 
-% \begin{align*}
 
-% \end{align*}
-% \end{proof}
-% \begin{equation}
-%     \alpha+\beta
-% \end{equation} 
-% \begin{theorem}{x.yz}
-% Let $n\in \Z$.  Then yada yada.
-% \end{theorem}
- 
-% \begin{proof}
-% Blah, blah, blah.  I'm so smart.
-% \end{proof}
- 
 % --------------------------------------------------------------
 %     You don't have to mess with anything below this line.
 % --------------------------------------------------------------
+
  
 \end{document}
