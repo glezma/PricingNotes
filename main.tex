@@ -245,7 +245,7 @@ and
 \end{proof}
 
 %  Page on setup examples
-\section{Alternative sequences for computing Incremental Profit}
+\section{Alternative setups for Incremental Profit computation}
 
 
 
@@ -281,11 +281,11 @@ Notice that we defined $B(t)$ as the Loan Balance subject to risk (Conductual af
 \end{align}
 Notice that (\ref{eq:bbar1}) is a first order equation in difference which can be easily solved as.
 \begin{align}
-    \bar{B}(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(t)-p_c(t)-p_p(t))B
+    \bar{B}(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(s)-p_c(s)-p_p(s))B
 \end{align}
 Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
 \begin{align}
-    \bar{B}(t) &=\prod^{t-1}_{s=1} (1-p_d(t)-p_c(t)-p_p(t))\bar{B}(t)\\
+    \bar{B}(t) &=\prod^{t-1}_{s=1} (1-p_d(s)-p_c(s)-p_p(s))\bar{B}(t)\\
     &=S(t)\bar{B}(t)
 \end{align}
 
@@ -303,9 +303,9 @@ Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a func
 \mbox{Variable} &\mbox{Notation} & \mbox{Calculation}\\ \hline
 \mbox{Balance in presence of risk }  & B(t)  & B(t)\\
 \mbox{Default  }  & D(t) & (1-p_d(t)) B(t)\\
-\mbox{Amortization}  & A(t) &(1-p_d(t)) B(t)A(1,r,T))\\
+\mbox{Amortization}  & A(t) &(1-p_d(t)) B(t)A(1,r,T-t+1))\\
 \mbox{Interest }  &  I(t) & (1-p_d(t))B(t)r\\
-\mbox{Full Prepayment}  & C(1) & p_c(t) B(t)[1-p_d(t)-(1-p_d(t))A(1,r,T)]\\
+\mbox{Full Prepayment}  & C(1) & p_c(t) B(t)[1-p_d(t)-(1-p_d(t))A(1,r,T-t+1)]\\
 \mbox{Principal   }  &  B(1) & B\\
 \mbox{Prepayment  }  & P(t) & p_d(t)B\\
 \hline
@@ -316,22 +316,25 @@ Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a func
   Given this definitions we can compute the recursive form for the balance function $B(t)$
 \begin{align}
 \scriptstyle
-     \bar{B}(t+1) =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)(1-p_d(t)-(1-p_d(t))A(1,r,T))-(1-p_d(t))A(1,r,T) ]-p_p(t) \bar{B}(1) \nonumber\\
-    =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)+p_d(t)p_c(t)+p_c(t)(1-p_d(t)A(1,r,T)-(1-p_d(t))A(1,r,T)]
+     \bar{B}(t+1) =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)(1-p_d(t)-(1-p_d(t))A(1,r,T-t+1))-(1-p_d(t))A(1,r,T-t+1) ]-p_p(t) \bar{B}(1) \nonumber\\
+    =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)+p_d(t)p_c(t)+p_c(t)(1-p_d(t)A(1,r,T-t+1)-(1-p_d(t))A(1,r,T-t+1)]
     -p_p(t) \bar{B}(1) \nonumber\\
     =&\scriptstyle
-    \bar{B}(t)[ (1-p_d(t))(1-p_c(t))-(1-p_d(t))(1-p_c(t))A(1,r,T)]
+    \bar{B}(t)[ (1-p_d(t))(1-p_c(t))-(1-p_d(t))(1-p_c(t))A(1,r,T-t+1)]
     -p_p(t) \bar{B}(1) \nonumber\\
      =&\scriptstyle
-    \bar{B}(t)(1-p_d(t))(1-p_c(t))(1-A(1,r,T))
+    \bar{B}(t)(1-p_d(t))(1-p_c(t))(1-A(1,r,T-t+1))
     -p_p(t) \bar{B}(1) \label{eq:bbar}\
 \end{align}
 Notice that (\ref{eq:bbar}) is a first order equation in difference which can be easily solved as.
 \begin{align}
-    \bar{B}(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(t))(1-p_p(t))B-\sum (\prod a_s) b_k
+    \bar{B}(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(s))(1-p_p(s))B-\sum (\prod a_s) b_k
 \end{align}
 Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
-
+\begin{align}
+    \bar{B}(t) &=\prod^{t-1}_{s=1} (1-p_d(s))(1-p_p(s))\bar{B}(t)-\sum (\prod a_s) b_k \nonumber\\
+    &=S(t)\bar{B}(t)-\sum (\prod a_s) b_k 
+\end{align}
 
 
 \chapter{Willingness to Pay Modeling (WTP): }
