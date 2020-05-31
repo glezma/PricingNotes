@@ -1,0 +1,42 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Welcome to Overleaf --- just edit your LaTeX on the left,
+% and we'll compile it for you on the right. If you open the
+% 'Share' menu, you can invite other users to edit at the same
+% time. See www.overleaf.com/learn for more info. Enjoy!
+%
+% Note: you can export the pdf to see the result at full
+% resolution.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Till Tantau
+% Source: The PGF/TikZ manual
+
+\documentclass{standalone}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+\usepackage[latin1]{inputenc}
+
+
+\begin{document}
+% [->,>=stealth',shorten >=1pt,auto,node distance=2cm,  semithick]
+\begin{tikzpicture}
+[->,>=stealth',node distance=2.1cm,>=stealth',bend angle=55,auto] 
+  \tikzstyle{every state}=[fill=white,draw=black,text=black]
+
+  \node[initial,state] (B)                    {$ B(t)$};
+  \node[state]         (D) [ below right of=B] {$D(t)$};
+  \node[state]         (C) [below of=B] {$C(t)$};
+  \node[state]         (P) [below left of=B]       {$P(t)$};
+  \node[state]         (A) [below of=C] {$A(t),I(t)$};
+  \path (B) edge              node {} (D)
+            edge              node {} (C)
+            edge              node {} (P)
+        (C) edge              node {} (A)
+        (D) edge              node {} (A)
+        (P) edge              node {} (A)
+            ;
+\end{tikzpicture}
+\end{document}
