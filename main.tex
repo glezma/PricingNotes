@@ -54,7 +54,7 @@
 %Note 1: The * tells LaTeX not to number the lines.  If you remove the *, be sure to remove it below, too.
 %Note 2: Inside the align environment, you do not want to use $-signs.  The reason for this is that this is already a math environment. This is why we have to include \text{} around any text inside the align environment.
 
-\chapter{Loan Pricing}
+\chapter{Risk Based Pricing}
 \section{ Preliminary definitions} 
 \subsection{Default and Prepayment probabilities:}
 $ \forall t \in \{1,2,...T\}$
@@ -195,27 +195,27 @@ Define the incremental profit function as:
 \subsection{Constant Installments}
 We can define a $c_f$ factor to compute constant installments by defining the following:
 \begin{align}
-    B(1) &= \frac{c}{(1+r)}+\frac{c}{(1+r)^2}+\frac{c}{(1+r)^3}+...++\frac{c}{(1+r)^T} \nonumber\\
+    \bar{B}(1) &= \frac{c}{(1+r)}+\frac{c}{(1+r)^2}+\frac{c}{(1+r)^3}+...++\frac{c}{(1+r)^T} \nonumber\\
     &=c\delta[1+\delta+\delta^2+\delta^3+\delta^4+...+\delta^{T-1}] \nonumber \\
     &=c\delta\left[\frac{1}{1-\delta}-\delta^T\frac{1}{1-\delta}\right] =c\delta\left(\frac{1-\delta^T}{1-\delta}\right)
 \end{align}
 \begin{align}
-    c=B(1)\left(\frac{1-\delta}{\delta}\right)\frac{1}{1-\delta^T}=B(1)\left[r\frac{(1+r)^T}{(1+r)^T-1}\right]
+    c=\bar{B}(1)\left(\frac{1-\delta}{\delta}\right)\frac{1}{1-\delta^T}=B(1)\left[r\frac{(1+r)^T}{(1+r)^T-1}\right]
 \end{align}
 
 \begin{align}
-    c_f(r,T):=\frac{r(1+r)^T}{(1+r)^T-1} \implies c:=B(1)c_f(r,T)
+    c_f(r,T):=\frac{r(1+r)^T}{(1+r)^T-1} \implies c:=\bar{B}(1)c_f(r,T)
 \end{align}
 
 Balance factor:
 \begin{align}
-    B(t)=B(1)\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]
+    \bar{B}(t)=\bar{B}(1)\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]
 \end{align}
 \begin{align}
-    B_f(t,r,T)=\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right] \implies B(t)=B(1)B_f(t,r,T)
+    B_f(t,r,T)=\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right] \implies \bar{B}(t)=\bar{B}(1)B_f(t,r,T)
 \end{align}
 \begin{align}
-    \bar{I}(t) = rB(1)B_f(t,r,T)
+    \bar{I}(t) = r\bar{B}(1)B_f(t,r,T)
 \end{align}
 Amortization factor:
 \begin{align}
@@ -224,7 +224,8 @@ Amortization factor:
 \end{align}
 
 
-\begin{theorem}{1.1 (Telescopic amortizations)}{} Let
+\begin{theorem}{1.1 (Telescopic amortizations)}{} \label{teo:1}
+Let
 \[
 \prod^{t-1}_{s=1}(1-A(1,r,T-s+1))=1-\sum^{t-1}_{s=1}A(s,r,T)
 \]
@@ -264,20 +265,29 @@ and
 \mbox{Default  }  & D(t) & p_d(t) B(t)\\
 \mbox{Full Prepayment}  & C(t) & p_c(t) B(t)\\
 \mbox{Prepayment  }  & P(t) & p_p(t)B(t)\\
-\mbox{Amortization}  & A(t) &(1-p_d(t)-p_c(t)-p_p(t)) B(t)A_f(1,r,T))\\
-\mbox{Interest }  & \bar{I}(t) & (1-p_d(t)-p_c(t)-p_p(t))(1-A_f(1,r,T))B(t)r\\
+\mbox{Amortization}  & A(t) &(1-p_d(t)-p_c(t)-p_p(t)) B(t)A_f(1,r,T-t+1))\\
+\mbox{Interest }  & I(t) & (1-p_d(t)-p_c(t)-p_p(t))B(t)r\\
 \mbox{Principal   }  &  B(1) & B\\
 \hline
 \end{array} % <-- step e
 \] % <-- step e
 \end{center}
-\pagebreak
 
-
-
-
-
-
+Notice that we defined $B(t)$ as the Loan Balance subject to risk (Conductual affected Loan Balance), as opposed to $\bar{B}(t)$, which is the Risk Free Loan Balance (Contractual Balance).  Given this definitions we can compute the recursive form for the balance function $B(t)$
+\begin{align}
+\bar{B}(t+1) =& \bar{B}(t)[1-p_d(t)-p_c(t)-p_p(t)-(1-p_d(t)-p_c(t)-p_p(t))A(1,r,T-t+1) ] \nonumber\\
+     =&
+    \bar{B}(t)(1-p_d(t)-p_c(t)-p_p(t))(1-A(1,r,T-t+1)) \label{eq:bbar1}\
+\end{align}
+Notice that (\ref{eq:bbar1}) is a first order equation in difference which can be easily solved as.
+\begin{align}
+    \bar{B}(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(t)-p_c(t)-p_p(t))B
+\end{align}
+Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
+\begin{align}
+    \bar{B}(t) &=\prod^{t-1}_{s=1} (1-p_d(t)-p_c(t)-p_p(t))\bar{B}(t)\\
+    &=S(t)\bar{B}(t)
+\end{align}
 
 \subsection{Prepayment dependent on initial balance}
 \begin{figure}[H]
@@ -294,7 +304,7 @@ and
 \mbox{Balance in presence of risk }  & B(t)  & B(t)\\
 \mbox{Default  }  & D(t) & (1-p_d(t)) B(t)\\
 \mbox{Amortization}  & A(t) &(1-p_d(t)) B(t)A(1,r,T))\\
-\mbox{Interest }  & \bar{ I}(t) & (1-p_d(t))B(t)r\\
+\mbox{Interest }  &  I(t) & (1-p_d(t))B(t)r\\
 \mbox{Full Prepayment}  & C(1) & p_c(t) B(t)[1-p_d(t)-(1-p_d(t))A(1,r,T)]\\
 \mbox{Principal   }  &  B(1) & B\\
 \mbox{Prepayment  }  & P(t) & p_d(t)B\\
@@ -302,8 +312,8 @@ and
 \end{array} % <-- step e
 \] % <-- step e
 \end{center}
-\pagebreak
-Notice that we defined $B(t)$ as the Loan Balance subject to risk (Conductual affected Loan Balance), as opposed to $\bar{B}(t)$, which is the Risk Free Loan Balance (Contractual Balance).  Given this definitions we can compute the recursive form for the balance function $B(t)$
+
+  Given this definitions we can compute the recursive form for the balance function $B(t)$
 \begin{align}
 \scriptstyle
      \bar{B}(t+1) =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)(1-p_d(t)-(1-p_d(t))A(1,r,T))-(1-p_d(t))A(1,r,T) ]-p_p(t) \bar{B}(1) \nonumber\\
@@ -320,12 +330,12 @@ Notice that (\ref{eq:bbar}) is a first order equation in difference which can be
 \begin{align}
     \bar{B}(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(t))(1-p_p(t))B-\sum (\prod a_s) b_k
 \end{align}
-Using theorem () we can state the conductual balance$B(t)$ as a function of the contractual balance.
+Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
 
 
 
-\section{Willingness to Pay (WTP): }
-\subsection{The Price-Response Function}
+\chapter{Willingness to Pay Modeling (WTP): }
+\section{The Price-Response Function}
 Each price-response function specifies the demand that the lender would experience at each pricie, which will depend on:
 \begin{enumerate}
     \item Total number of clientes interested in the loan
@@ -345,7 +355,7 @@ d(p)=D\bar{F}(p)
 \begin{align}
 \bar{F}(p)=\int^\infty_p f(w)dw
 \end{align}
-\subsection{Segmented vs Join Estimation}
+\section{Segmented vs Join Estimation}
 For $n$ segments, the segmented estimation assumes each segments has its own demand function so we need to estimate $2n$ parameters.
 \begin{align}
 \bar{F_i}(p_i)=\frac{e^{a_i+b_i p_i}}{1+e^{a_i+b_i p_i}}
@@ -356,13 +366,13 @@ For $n$ segments, the join estimation assume we can estimate one single price pr
 \bar{F}(p_i,a,b,\theta,x_i)=\frac{e^{a+b p_i+\theta^T x_i}}{1+e^{a+b p_i+\theta^T x_i}}
 \end{align}
 
-\section{Price optimization (CLV+WTP): }
-\subsection{Price optimization without constraints}
+\chapter{Price optimization (CLV+WTP): }
+\section{Price optimization without constraints}
 \begin{align}
 p^*= \arg \max_p \sum_{i=1}^N D_i\overline{F}_i(p_i)\pi(p)
 \end{align}
 
-\subsection{Price optimization with competing objectives: The efficient Frontier}
+\section{Price optimization with competing objectives: The efficient Frontier}
 
 \begin{align}
 p^*_j= \arg \max_p \sum_{i=1}^N D_i\bar{F}_i(p_i)\pi(p)
