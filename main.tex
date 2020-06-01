@@ -8,11 +8,6 @@
 \usepackage{blindtext}
 \usepackage{pst-node}
 \usepackage{pdfpages}
-% \usetikzlibrary{shapes, positioning, arrows.meta}
-% \usetikzlibrary{decorations, decorations.markings}
-    % \usepackage{tikz}
-    % \usetikzlibrary{graphs,graphdrawing,quotes}
-    % \usegdlibrary{trees}
 
 \usepackage{pst-plot}
 \newcommand{\N}{\mathbb{N}}
@@ -39,7 +34,7 @@
 %                         Start here
 % --------------------------------------------------------------
  
-\title{Pricing Modeling Notes}%replace X with the appropriate number
+\title{Pricing Modeling Notes}
 \author{\\ %replace with your name
 } %if necessary, replace with your course title
  
@@ -58,15 +53,15 @@
 \section{ Preliminary definitions} 
 \subsection{Default and Prepayment probabilities:}
 $ \forall t \in \{1,2,...T\}$
-\[ % <-- step a
-\begin{array}{rr} % <-- steps b and c
+\[ 
+\begin{array}{rr} 
    p_p(t)  :&  \mbox{
    Probability that the loan will prepay at time t given that it has survived to that point } \\
    p_p(t)  : &  \mbox{
    Probability that the loan will default at time t given that it has survived to that point
    }
-\end{array} \noindent% <-- step e
-\] % <-- step e
+\end{array} \noindent
+\] 
 
  \subsection{Survival function:}
 $S(t)$ :   Probability that a loan survives until period t 
@@ -86,21 +81,22 @@ The Current Balance function $\bar{B}(t)$ is the remaining balance left at time 
 \begin{align}
 \bar{ I}(t)&=r\times \bar{ B}(t)
 \end{align}
-The acute reader will notice that the definition of $\bar{ B}(t)$, in terms of the remaining balance left at time $t-1$ , was given so that we can state such a simple equation for $\bar{ I}(t)$.
+The acute reader will notice that the definition of $\bar{B}(t)$, in terms of the remaining balance left at time $t-1$ , was given so that we can state such a simple equation for $\bar{I}(t)$.
 
 
 \paragraph{Constant amortization: } The remaining balance at time $t$ for a loan with principal (Balance at t=0) B is given by:
 
 \begin{align}
-\bar{ B}(t)&=B \times (1-\frac{t-1}{T})
+\bar{B}(t)&=B \times (1-\frac{t-1}{T})
 \end{align}
 
 
 \section{ Terms included in the incremental profit (CLV)}
 \subsection{ Interest on loans: }
 \begin{align}
-LI(t) = S(t)\bar{ B}(t)r
+LI(t) = S(t)\bar{ B}(t)r \label{eq:li}
 \end{align}
+Equation (\ref{eq:li}) will be proved in section (\ref{can}). For now lets just use our intuition and state that each dollar has an unconditional probability to survive up to time $t$ of $S(t)$ 
 \subsection{  Cost of Funds: }
 \begin{align}
 COF(t) = S_c(t)\bar{ B}_c(t)r_c
@@ -110,7 +106,7 @@ Where:
 S_c(t)= \Pi_{s=0}^t [1- p_p(s)-(1-LGD(s))p_d(s) ]
 \end{align}
 
-\subsection{ Equity Benefit (Captal Rebate): }
+\subsection{ Equity Benefit (Capital Rebate): }
 \begin{align}
 EB(t) = \alpha S(t)\bar{ B}(t) r_c
 \end{align}
@@ -152,17 +148,17 @@ NPV(x(t),r,T)=\sum_{t=1}^T \frac{x(t)}{(1+r)^t}
 \[ % <-- step a
 \begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
 \mbox{Element} & \mbox{Notation} & \mbox{Calculation}\\ \hline
-\mbox{ Lending Interest }  & LI & NVP(LI(t),r_d,T)\\
+\mbox{Lending Interest }  & LI & NVP(LI(t),r_d,T)\\
 \mbox{Cost of Funds   }  & COF & NVP(COF(t),r_d,T)\\
 \mbox{Equity benefit }  & EB & NVP(EB(t),r_d,T)\\
 \mbox{Fees }  & LI & NVP(F(t),r_d,T)\\
-\mbox{ Ancillary profit }  & A & -\\
+\mbox{Ancillary profit }  & A & -\\
 \mbox{Origination cost}  & OC & -\\
-\mbox{ Commision  }  & COM & -\\
-\mbox{ Servicing Costs}  & SC & NVP(SC(t),r_d,T)\\
-\mbox{ Expected Loss }  & EL & NVP(EL(t),r_d,T)\\
-\mbox{ Collection costs }  & C & NVP(C(t),r_d,T)\\
-\mbox{ Equity charge}  & EC & NVP(EC(t),r_d,T)\\
+\mbox{Commision  }  & COM & -\\
+\mbox{Servicing Costs}  & SC & NVP(SC(t),r_d,T)\\
+\mbox{Expected Loss }  & EL & NVP(EL(t),r_d,T)\\
+\mbox{Collection costs }  & C & NVP(C(t),r_d,T)\\
+\mbox{Equity charge}  & EC & NVP(EC(t),r_d,T)\\
 
 \hline
 \end{array} % <-- step e
@@ -174,11 +170,11 @@ NPV(x(t),r,T)=\sum_{t=1}^T \frac{x(t)}{(1+r)^t}
 \[ % <-- step a
 \begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
 \mbox{Element} & \mbox{Notation} & \mbox{Calculation}\\ \hline
-\mbox{ Net Interest Income }  & NII & LI-COF+EB\\
+\mbox{Net Interest Income }  & NII & LI-COF+EB\\
 \mbox{Total Income  }  & TI & NII+A+F\\
 \mbox{Net Income before tax}  & NIBT & TI-OC-COM-SC-LD-C\\
 \mbox{Net Income after tax }  & NIAT&(1-\tau)\times NIBT \\
-\mbox{ Incremental profit  }  & IP & NIAT-EC\\
+\mbox{Incremental profit  }  & IP & NIAT-EC\\
 
 \hline
 \end{array} % <-- step e
@@ -206,7 +202,6 @@ We can define a $c_f$ factor to compute constant installments by defining the fo
 \begin{align}
     c_f(r,T):=\frac{r(1+r)^T}{(1+r)^T-1} \implies c:=\bar{B}(1)c_f(r,T)
 \end{align}
-
 Balance factor:
 \begin{align}
     \bar{B}(t)=\bar{B}(1)\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]
@@ -224,7 +219,7 @@ Amortization factor:
 \end{align}
 
 
-\begin{theorem}{1.1 (Telescopic amortizations)}{} \label{teo:1}
+\begin{theorem}{1.1 (Telescopic Amortizations)}{} \label{teo:1}
 Let
 \[
 \prod^{t-1}_{s=1}(1-A(1,r,T-s+1))=1-\sum^{t-1}_{s=1}A(s,r,T)
@@ -240,8 +235,27 @@ and
 \[
 \delta =1/(1+r)
 \]
+Working on $E_1$ and defining $\xi=1+r$:
+\begin{align}
+1-A(1,r,T-s+1) = \frac{(1+r)^{T-s+1}-1-r}{(1+r)^{T-s+1}-1}=\frac{\xi^{T-s+1}-\xi}{\xi^{T-s+1}-1} \nonumber
+\end{align}
 
+\begin{align}
+\implies E_1 =& \frac{(\xi^T-\xi)}{(\xi^T-1)}\times \frac{(\xi^{T-1}-\xi)}{(\xi^{T-1}-1)} \times \frac{(\xi^{T-2}-\xi)}{(\xi^{T-2}-1)} \times ... \times \frac{(\xi^{T-t+1}-\xi)}{(\xi^{T-t+1}-1)} \nonumber\\
+=&\xi^t \frac{(\xi^{T-1}-1)}{(\xi^T-1)}\times \frac{(\xi^{T-2}-1)}{(\xi^{T-1}-1)} \times \frac{(\xi^{T-3}-1)}{(\xi^{T-2}-1)} \times ... \times \frac{(\xi^{T-t}-1)}{(\xi^{T-t+1}-1)} \nonumber\\
+=&\frac{\xi^T-\xi^t}{\xi^T-1} \label{eq:e1}
+\end{align}
 
+Working on $E_2$:
+\begin{align}
+A(s,r,T) = \frac{r(1+r)^{s-1}}{(1+r)^{T}-1}=(\xi-1)\frac{\xi^{s-1}}{\xi^{T}-1} \nonumber
+\end{align}
+
+\begin{align}
+\implies E_2 =& 1-\frac{(\xi-1)(1+\xi+\xi^2+\xi^3+...+\xi^{t-1})}{\xi^T-1}\nonumber\\
+=&\frac{\xi^T-\xi^t}{\xi^T-1} 
+\end{align}
+$\therefore E1=E2$
 \end{proof}
 
 %  Page on setup examples
@@ -249,7 +263,7 @@ and
 
 
 
-\subsection{Canonical model}
+\subsection{Canonical model \label{can}} 
 \begin{figure}[H]
   \centering
       \includegraphics[width=.3\textwidth]{Graph2.pdf} 
@@ -275,17 +289,17 @@ and
 
 Notice that we defined $B(t)$ as the Loan Balance subject to risk (Conductual affected Loan Balance), as opposed to $\bar{B}(t)$, which is the Risk Free Loan Balance (Contractual Balance).  Given this definitions we can compute the recursive form for the balance function $B(t)$
 \begin{align}
-\bar{B}(t+1) =& \bar{B}(t)[1-p_d(t)-p_c(t)-p_p(t)-(1-p_d(t)-p_c(t)-p_p(t))A(1,r,T-t+1) ] \nonumber\\
+B(t+1) =& B(t)[1-p_d(t)-p_c(t)-p_p(t)-(1-p_d(t)-p_c(t)-p_p(t))A(1,r,T-t+1) ] \nonumber\\
      =&
-    \bar{B}(t)(1-p_d(t)-p_c(t)-p_p(t))(1-A(1,r,T-t+1)) \label{eq:bbar1}\
+    B(t)(1-p_d(t)-p_c(t)-p_p(t))(1-A(1,r,T-t+1)) \label{eq:bbar1}\
 \end{align}
 Notice that (\ref{eq:bbar1}) is a first order equation in difference which can be easily solved as.
 \begin{align}
-    \bar{B}(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(s)-p_c(s)-p_p(s))B
+    B(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(s)-p_c(s)-p_p(s))B
 \end{align}
 Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
 \begin{align}
-    \bar{B}(t) &=\prod^{t-1}_{s=1} (1-p_d(s)-p_c(s)-p_p(s))\bar{B}(t)\\
+    B(t) &=\prod^{t-1}_{s=1} (1-p_d(s)-p_c(s)-p_p(s))\bar{B}(t) \nonumber\\
     &=S(t)\bar{B}(t)
 \end{align}
 
@@ -339,13 +353,13 @@ Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a func
 
 \chapter{Willingness to Pay Modeling (WTP): }
 \section{The Price-Response Function}
-Each price-response function specifies the demand that the lender would experience at each pricie, which will depend on:
+Each price-response function specifies the demand that the lender would experience at each price, which will depend on:
 \begin{enumerate}
-    \item Total number of clientes interested in the loan
+    \item Total number of clients interested in the loan
     \item Number of applicant clients
-    \item The number of applicat the lender deems creditworthy and quotes a price.
+    \item The number of applicant the lender deems creditworthy and quotes a price.
     \item Number of accepted applicants who would achieve a positive surplus from taking the loan from the lender at the offered price.
-    \item Number of accepted applicants who \textbf{ take up} the offered loan.
+    \item Number of accepted applicants who \textbf{take-up} the offered loan.
 \end{enumerate}
 In most lending markets, the final price is not known to the client at the time she applies for the loan so we assume that the number of clients who apply for a loan is not influenced by the price.
 \begin{align}
