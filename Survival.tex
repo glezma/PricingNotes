@@ -1,0 +1,28 @@
+\chapter{Survival models}
+\subsection{Common survival setup}
+Let T be a positive random variable in $1,2,3,...$
+\begin{align}
+    S(t)=&P(T>t) \\
+    F(t)=&1-S(t)=1-P(T>t)=P(T\leq t)
+\end{align}
+\subsection{Survival setup in presence of competing risks}
+
+We define the cumulative incidence function as:
+\begin{align}
+    CIF_k(t)=&P(T\leq t,D=k) \\
+    &=\sum_k P(T \leq t,D=k) = P(T \leq t)
+\end{align}
+In order to see what is the relationship between the CIF function and the usual conditional probability of default (death) we state the definition of conditional probability and use the fact that the event $T=t+1 \wedge T>t$ is equal to $T=t+1$ standalone.
+\begin{align}
+    p_k(t+1)&=p(T=t+1,D=k/T>t)=\frac{P(T=t+1,D=k)}{P(T>t)}\\
+    &= \frac{ P(T \leq t+1,D=k)-P(T\leq t,D=k)}{
+    1-\sum_k P(T \leq t, D=k)
+    }
+\end{align}
+
+As an example lets consider that $D=1$ represents default
+and $D=2$ represents prepayment then the conditional probabilities of default and prepayment are given by:
+\begin{align}
+p_d(t+1)&= \frac{CIF_d(t+1)-CIF_d(t)  }{
+1- CIF_d(t)-CIF_p(t)}  
+\end{align}
