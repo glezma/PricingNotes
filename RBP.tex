@@ -1,6 +1,21 @@
 
 \chapter{Risk Based Pricing}
 \section{ Preliminary definitions} 
+
+\renewcommand{\arraystretch}{1.5} % <-- optional a
+\begin{center} % <-- optional b
+\[ % <-- step a
+\begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
+\mbox{Element} & \mbox{Notation}\\ \hline
+\mbox{Client Interest Rate}  & r \\
+\mbox{Cost of Funds Rate,Fund Transfer Pricing FTP, TT   }  & r_c \\
+\mbox{Discount Rate }  & r_d\\
+\mbox{Contractual Maturity }  & T \\
+\hline
+\end{array} % <-- step e
+\] % <-- step e
+\end{center}
+
 \subsection{Default and Prepayment probabilities:}
 $ \forall t \in \{1,2,...T\}$
 \[ 
@@ -55,6 +70,7 @@ Where:
 \begin{align}
 S_c(t)= \Pi_{s=0}^t [1- p_p(s)-(1-LGD(s))p_d(s) ]
 \end{align}
+The last formula can be viewed as the complement for the probability of death for 1 dollar. If a prepayment event 
 
 \subsection{ Equity Benefit (Capital Rebate): }
 \begin{align}
