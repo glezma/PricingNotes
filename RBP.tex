@@ -150,15 +150,18 @@ NPV(x(t),r,T)=\sum_{t=1}^T \frac{x(t)}{(1+r)^t}
 \subsection{ Incremental Profit Function: }
 Define the incremental profit function as:
 \begin{align}
-\pi(p)=IP(p)
+\pi(p)=IP(p) \label{eq:IP}
 \end{align}
 %Page on setup equations
 \section{Financial Math operators}
 \subsection{Constant Installments}
-We can define a $c_f$ factor to compute constant installments by defining the following:
+We can define a $c_f$ function to compute constant installments by defining the following:
 \begin{align}
     \bar{B}(1) &= \frac{c}{(1+r)}+\frac{c}{(1+r)^2}+\frac{c}{(1+r)^3}+...++\frac{c}{(1+r)^T} \nonumber\\
-    &=c\delta[1+\delta+\delta^2+\delta^3+\delta^4+...+\delta^{T-1}] \nonumber \\
+\end{align}
+Setting $\delta=\frac{1}{1+r}$
+\begin{align}
+    \bar{B}(1) &==c\delta[1+\delta+\delta^2+\delta^3+\delta^4+...+\delta^{T-1}] \nonumber \\
     &=c\delta\left[\frac{1}{1-\delta}-\delta^T\frac{1}{1-\delta}\right] =c\delta\left(\frac{1-\delta^T}{1-\delta}\right)
 \end{align}
 \begin{align}
@@ -166,27 +169,29 @@ We can define a $c_f$ factor to compute constant installments by defining the fo
 \end{align}
 
 \begin{align}
-    c_f(r,T):=\frac{r(1+r)^T}{(1+r)^T-1} \implies c:=\bar{B}(1)c_f(r,T)
+    \boxed{c_f(r,T):=\frac{r(1+r)^T}{(1+r)^T-1}} \implies c=\bar{B}(1)c_f(r,T)
 \end{align}
 Balance factor:
 \begin{align}
     \bar{B}(t)=\bar{B}(1)\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]
 \end{align}
 \begin{align}
-    B_f(t,r,T)=\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right] \implies \bar{B}(t)=\bar{B}(1)B_f(t,r,T)
+    \boxed{B_f(t,r,T)=\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]} \implies \bar{B}(t)=\bar{B}(1)B_f(t,r,T)
 \end{align}
 \begin{align}
     \bar{I}(t) = r\bar{B}(1)B_f(t,r,T)
 \end{align}
 Amortization factor:
 \begin{align}
-    A_f(t,r,T) &= c_f(r,T)-rB_f(t,r,T)\\
-    &=\frac{r(1+r)^{t-1}}{(1+r)^T-1}
+    A_f(t,r,T) = c_f(r,T)-rB_f(t,r,T)
+\end{align}
+\begin{align}
+    \boxed{A_f(t,r,T)=\frac{r(1+r)^{t-1}}{(1+r)^T-1}} \label{eq:afactor}
 \end{align}
 
 
 \begin{theorem}{1.1 (Telescopic Amortizations)}{} \label{teo:1}
-Let
+If A is the function defined in (\ref{eq:afactor}) then:
 \[
 \prod^{t-1}_{s=1}(1-A(1,r,T-s+1))=1-\sum^{t-1}_{s=1}A(s,r,T)
 \]
@@ -201,7 +206,7 @@ and
 \[
 \delta =1/(1+r)
 \]
-Working on $E_1$ and defining $\xi=1+r$:
+Working on $E_1$ and setting $\xi=1+r$:
 \begin{align}
 1-A(1,r,T-s+1) = \frac{(1+r)^{T-s+1}-1-r}{(1+r)^{T-s+1}-1}=\frac{\xi^{T-s+1}-\xi}{\xi^{T-s+1}-1} \nonumber
 \end{align}
@@ -229,7 +234,7 @@ $\therefore E1=E2$
 
 
 
-\subsection{Canonical model \label{can}} 
+\subsection{Standard model \label{can}} 
 \begin{figure}[H]
   \centering
       \includegraphics[width=.3\textwidth]{Graph2.pdf} 

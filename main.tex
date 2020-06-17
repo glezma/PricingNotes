@@ -1,8 +1,10 @@
 
 \documentclass[12pt]{book}
- \usepackage{listings}
+\usepackage{listings}
 \usepackage{xcolor}
 
+\usepackage{amsmath}
+\usepackage{svg}
 %New colors defined below
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -28,7 +30,7 @@
   tabsize=2
 }
 
-%"mystyle" code listing set
+% %"mystyle" code listing set
 \lstset{style=mystyle}
 \usepackage[margin=1in]{geometry} 
 \usepackage{amsmath,amsthm,amssymb}
@@ -39,6 +41,8 @@
 \usepackage{pdfpages}
 
 \usepackage{pst-plot}
+\usepackage{svg}
+\usepackage{amsmath}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 
@@ -82,7 +86,8 @@
 \include{WTP}
 \include{PriceOpt}
 \include{Survival}
-
+\include{PricingPy}
+\include{pythonexample}
 
 % --------------------------------------------------------------
 %     You don't have to mess with anything below this line.

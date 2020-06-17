@@ -11,16 +11,14 @@ Each price-response function specifies the demand that the lender would experien
 \end{enumerate}
 In most lending markets, the final price is not known to the client at the time she applies for the loan so we assume that the number of clients who apply for a loan is not influenced by the price.
 \begin{align}
-d(p)=D\bar{F}(p)
+d(p)=D\bar{F}(p) \label{eq:demand}
 \end{align}
 $d(p)$ is the number of the loans offered by a lender that would be taken up at the price p. $D$ is the number of successful applicants for the loan, and $\overline{F}(p)$ is the take-up rate, which is defined as the fraction of successful applicants who will take up the loan at price $p$
-\begin{align}
-d(p)=D\bar{F}(p)
-\end{align}
+
 \begin{align}
 \bar{F}(p)=\int^\infty_p f(w)dw
 \end{align}
-\section{Segmented vs Join Estimation}
+\section{Segmented vs Join Estimation \label{sec:takeuprate}}
 For $n$ segments, the segmented estimation assumes each segments has its own demand function so we need to estimate $2n$ parameters.
 \begin{align}
 \bar{F_i}(p_i)=\frac{e^{a_i+b_i p_i}}{1+e^{a_i+b_i p_i}}
