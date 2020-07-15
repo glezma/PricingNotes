@@ -56,6 +56,193 @@ The acute reader will notice that the definition of $\bar{B}(t)$, in terms of th
 \end{align}
 
 
+
+%Page on setup equations
+\section{Financial Math operators}
+\subsection{Constant Installments}
+We can define a $c_f$ function to compute constant installments by defining the following:
+\begin{align}
+    \bar{B}(1) &= \frac{c}{(1+r)}+\frac{c}{(1+r)^2}+\frac{c}{(1+r)^3}+...++\frac{c}{(1+r)^T} \nonumber\\
+\end{align}
+Setting $\delta=\frac{1}{1+r}$
+\begin{align}
+    \bar{B}(1) &==c\delta[1+\delta+\delta^2+\delta^3+\delta^4+...+\delta^{T-1}] \nonumber \\
+    &=c\delta\left[\frac{1}{1-\delta}-\delta^T\frac{1}{1-\delta}\right] =c\delta\left(\frac{1-\delta^T}{1-\delta}\right)
+\end{align}
+\begin{align}
+    c=\bar{B}(1)\left(\frac{1-\delta}{\delta}\right)\frac{1}{1-\delta^T}=B(1)\left[r\frac{(1+r)^T}{(1+r)^T-1}\right]
+\end{align}
+
+\begin{align}
+    \boxed{c_f(r,T):=\frac{r(1+r)^T}{(1+r)^T-1}} \implies c=\bar{B}(1)c_f(r,T)
+\end{align}
+Balance factor:
+\begin{align}
+    \bar{B}(t)=\bar{B}(1)\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]
+\end{align}
+\begin{align}
+    \boxed{B_f(t,r,T)=\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]} \implies \bar{B}(t)=\bar{B}(1)B_f(t,r,T)
+\end{align}
+\begin{align}
+    \bar{I}(t) = r\bar{B}(1)B_f(t,r,T)
+\end{align}
+Amortization factor:
+\begin{align}
+    A_f(t,r,T) = c_f(r,T)-rB_f(t,r,T)
+\end{align}
+\begin{align}
+    \boxed{A_f(t,r,T)=\frac{r(1+r)^{t-1}}{(1+r)^T-1}} \label{eq:afactor}
+\end{align}
+
+
+\begin{theorem}{1.1 (Telescopic Amortizations)}{} \label{teo:1}
+If A is the function defined in (\ref{eq:afactor}) then:
+\[
+\prod^{t-1}_{s=1}(1-A(1,r,T-s+1))=1-\sum^{t-1}_{s=1}A(s,r,T)
+\]
+\end{theorem}
+
+\begin{proof}{}{} Lets define
+\[
+E_1=\prod^{t-1}_{s=1}(1-A(1,r,T-s+1)), \\
+E_2 =1-\sum^{t-1}_{s=1}A(s,r,T)
+\]
+and
+\[
+\delta =1/(1+r)
+\]
+Working on $E_1$ and setting $\xi=1+r$:
+\begin{align}
+1-A(1,r,T-s+1) = \frac{(1+r)^{T-s+1}-1-r}{(1+r)^{T-s+1}-1}=\frac{\xi^{T-s+1}-\xi}{\xi^{T-s+1}-1} \nonumber
+\end{align}
+
+\begin{align}
+\implies E_1 =& \frac{(\xi^T-\xi)}{(\xi^T-1)}\times \frac{(\xi^{T-1}-\xi)}{(\xi^{T-1}-1)} \times \frac{(\xi^{T-2}-\xi)}{(\xi^{T-2}-1)} \times ... \times \frac{(\xi^{T-t+1}-\xi)}{(\xi^{T-t+1}-1)} \nonumber\\
+=&\xi^t \frac{(\xi^{T-1}-1)}{(\xi^T-1)}\times \frac{(\xi^{T-2}-1)}{(\xi^{T-1}-1)} \times \frac{(\xi^{T-3}-1)}{(\xi^{T-2}-1)} \times ... \times \frac{(\xi^{T-t}-1)}{(\xi^{T-t+1}-1)} \nonumber\\
+=&\frac{\xi^T-\xi^t}{\xi^T-1} \label{eq:e1}
+\end{align}
+
+Working on $E_2$:
+\begin{align}
+A(s,r,T) = \frac{r(1+r)^{s-1}}{(1+r)^{T}-1}=(\xi-1)\frac{\xi^{s-1}}{\xi^{T}-1} \nonumber
+\end{align}
+
+\begin{align}
+\implies E_2 =& 1-\frac{(\xi-1)(1+\xi+\xi^2+\xi^3+...+\xi^{t-1})}{\xi^T-1}\nonumber\\
+=&\frac{\xi^T-\xi^t}{\xi^T-1} 
+\end{align}
+$\therefore E1=E2$
+\end{proof}
+
+%  Page on setup examples
+\section{Alternative setups for Incremental Profit computation}
+
+
+
+\subsection{Standard model \label{can}} 
+In this model prepayments/full prepayment, default probability are expressed as conditional probabilities. This probabilities are conditioned on the running active balance i.e. the balance that has not been prepaid or defaulted upon.
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=.3\textwidth]{Graph2.pdf} 
+ \caption{Computation Graph}
+ \label{fig:graph2}
+\end{figure}
+
+\begin{center} % <-- optional b
+%\[ % <-- step a
+\begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
+\mbox{Variable} &\mbox{Notation} & \mbox{Calculation}\\ \hline
+\mbox{Balance in presence of risk }  & B(t)  & B(t)\\
+\mbox{Default  }  & D(t) & p_d(t) B(t)\\
+\mbox{Full Prepayment}  & C(t) & p_c(t) B(t)\\
+\mbox{Prepayment  }  & P(t) & p_p(t)B(t)\\
+\mbox{Amortization}  & A(t) &(1-p_d(t)-p_c(t)-p_p(t)) B(t)A_f(1,r,T-t+1))\\
+\mbox{Interest }  & I(t) & (1-p_d(t)-p_c(t)-p_p(t))B(t)r\\
+\mbox{Principal   }  &  B(1) & B\\
+\hline
+\end{array} % <-- step e
+%\] % <-- step e
+\captionof{table}{Computation for Model 1: Standard Model} 
+\end{center}
+
+Notice that we defined $B(t)$ as the Loan Balance subject to risk (Conductual affected Loan Balance), as opposed to $\bar{B}(t)$, which is the Risk Free Loan Balance (Contractual Balance).  Given this definitions we can compute the recursive form for the balance function $B(t)$
+\begin{align}
+B(t+1) =& B(t)[1-p_d(t)-p_c(t)-p_p(t)-(1-p_d(t)-p_c(t)-p_p(t))A(1,r,T-t+1) ] \nonumber\\
+     =&
+    B(t)(1-p_d(t)-p_c(t)-p_p(t))(1-A(1,r,T-t+1)) \label{eq:bbar1}\
+\end{align}
+Notice that (\ref{eq:bbar1}) is a first order equation in difference which can be easily solved as.
+\begin{align}
+    B(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(s)-p_c(s)-p_p(s))B
+\end{align}
+Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
+\begin{align}
+    B(t) &=\prod^{t-1}_{s=1} (1-p_d(s)-p_c(s)-p_p(s))\bar{B}(t) \nonumber\\
+    &=S(t)\bar{B}(t) \nonumber
+\end{align}
+\begin{align}
+    \boxed{B(t)=S(t-1)\bar{B}(t) } \label{eq:model1}
+\end{align}
+Equation \ref{eq:model1} states a very simple relation between the theoretical/contractual balance $\bar{B}(t)$ and the behavioral balance $B(t)$. We have derived this equation from a first principles approach through the Theorem of Telescopic Amortization (\ref{teo:1}). This equation represent a very powerful shortcut not only for using intuition, since the behavioral balance can be thought of as the contractual balance adjusted by the survival probability, but also for implementing the model programatically using vectorization instead of recursive loops over the different points in the payment schedule, the last alternative can be very hard to maintain and compute, not to mention its proneness to error.
+
+\subsection{Prepayment dependent on initial balance}
+This model is a variation of the previous one in which the prepayment probabiliy is a proportion of the initial balance/principal $B(1)$
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=.3\textwidth]{Graph1.pdf} 
+ \caption{Computation Graphs: Model 2}
+ \label{fig:Test}
+\end{figure}
+
+\begin{center} % <-- optional b
+% \[ % <-- step a
+\begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
+\mbox{Variable} &\mbox{Notation} & \mbox{Calculation}\\ \hline
+\mbox{Balance in presence of risk }  & B(t)  & B(t)\\
+\mbox{Default  }  & D(t) & p_d(t) B(t)\\
+\mbox{Amortization}  & A(t) &(1-p_d(t)) B(t)A(1,r,T-t+1))\\
+\mbox{Interest }  &  I(t) & (1-p_d(t))B(t)r\\
+\mbox{Full Prepayment}  & C(1) & p_c(t) B(t)[1-p_d(t)-(1-p_d(t))A(1,r,T-t+1)]\\
+\mbox{Principal   }  &  B(1) & B\\
+\mbox{Prepayment  }  & P(t) & p_p(t)B\\
+\hline
+\end{array} % <-- step e
+% \] % <-- step e
+\captionof{table}{Computation for Model 2: Prepayment Dependent on Initial Balance} 
+\end{center}
+
+  Given this definitions we can compute the recursive form for the balance function $B(t)$
+\begin{align}
+\scriptstyle
+     \bar{B}(t+1) =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)(1-p_d(t)-(1-p_d(t))A(1,r,T-t+1))-(1-p_d(t))A(1,r,T-t+1) ]-p_p(t) \bar{B}(1) \nonumber\\
+    =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)+p_d(t)p_c(t)+p_c(t)(1-p_d(t)A(1,r,T-t+1)-(1-p_d(t))A(1,r,T-t+1)]
+    -p_p(t) \bar{B}(1) \nonumber\\
+    =&\scriptstyle
+    \bar{B}(t)[ (1-p_d(t))(1-p_c(t))-(1-p_d(t))(1-p_c(t))A(1,r,T-t+1)]
+    -p_p(t) \bar{B}(1) \nonumber\\
+     =&\scriptstyle
+    \bar{B}(t)(1-p_d(t))(1-p_c(t))(1-A(1,r,T-t+1))
+    -p_p(t) \bar{B}(1) \label{eq:bbar}\
+\end{align}
+Notice that (\ref{eq:bbar}) is a first order equation in difference of type $x(t+1) = \alpha(t)x(t) + \beta(t)$  where $\alpha(t):=(1-p_d(t))(1-p_c(t))(1-A(1,r,T-t+1))$  , $\beta(t):= -p_p(t) \bar{B}(1)$, $x(t):= \bar{B}(t)$ and the initial condition given by the lended principal $x(1) = \bar{B}(1) = B$. This equation can be easily solved as: 
+\begin{align}
+    x(t+1) = x_1 \prod_{s=1}^t \alpha(s) + \sum_{k=1}^{t-2} \left[\beta(k) \prod_{s=k+1}^{t-1}\alpha(s)\right]+\beta(t-1)
+\end{align}
+Plugging back the definitions of $\alpha(t)$, $\beta(t)$ and ,$x(t)$ we get:
+\begin{align}
+    B(t+1) =&\prod^{t}_{s=1} (1-p_d(s))(1-p_p(s))(1-A(1,r,T-s+1))B \nonumber\\
+            &-\sum_{k=1}^{t-1}\left[p_p(t) B \prod_{s=k+1}^{t-1}(1-p_d(t))(1-p_c(t))(1-A(1,r,T-t+1))\right]-p_p(t-1) B
+\end{align}
+Using the theorem of Telescopic Amortizations (\ref{teo:1}), the definitions for survival curve and lagging t one period we can state the conductual balance $B(t)$ as a function of the contractual balance $\bar{B}(t)$.
+\begin{align}
+    B(t) &=\prod^{t-1}_{s=1} (1-p_d(s))(1-p_p(s))\bar{B}(t)-\sum_{k=1}^{t-2} \left[ p_p(k)B \frac{S(t-2) }{S(k) }  \frac{ \bar{B}(t-1)}{ \bar{B}(k+1)}\right] \nonumber\\
+    &=S(t-1)\bar{B}(t)-\sum_{k=1}^{t-2} \left[ p_p(k)B \frac{S(t-2) }{S(k) }  \frac{ \bar{B}(t-1)}{ \bar{B}(k+1)}\right] \nonumber 
+\end{align}
+
+\begin{align}
+    \boxed{B(t)=S(t-1)\bar{B}(t)-\sum_{k=1}^{t-2} \left[ p_p(k)B \frac{S(t-2) }{S(k) }  \frac{ \bar{B}(t-1)}{ \bar{B}(k+1)}\right]  } \label{eq:model2}
+\end{align}
+Equation (\ref{eq:model2}) is analogous to equation (\ref{eq:model1}) with an aditional term that represents a weighted sum of the last prepayment amounts where the last prepaymet has a weight of one. Equivalently, instead of excluding the prepayment amount through the survival factor $S(t-1)$ we are substracting these amounts outside the $S(t-1)\bar{B}(t)$ factor.
 \section{ Terms included in the incremental profit (CLV)}
 \subsection{ Interest on loans: }
 \begin{align}
@@ -151,172 +338,4 @@ NPV(x(t),r,T)=\sum_{t=1}^T \frac{x(t)}{(1+r)^t}
 Define the incremental profit function as:
 \begin{align}
 \pi(p)=IP(p) \label{eq:IP}
-\end{align}
-%Page on setup equations
-\section{Financial Math operators}
-\subsection{Constant Installments}
-We can define a $c_f$ function to compute constant installments by defining the following:
-\begin{align}
-    \bar{B}(1) &= \frac{c}{(1+r)}+\frac{c}{(1+r)^2}+\frac{c}{(1+r)^3}+...++\frac{c}{(1+r)^T} \nonumber\\
-\end{align}
-Setting $\delta=\frac{1}{1+r}$
-\begin{align}
-    \bar{B}(1) &==c\delta[1+\delta+\delta^2+\delta^3+\delta^4+...+\delta^{T-1}] \nonumber \\
-    &=c\delta\left[\frac{1}{1-\delta}-\delta^T\frac{1}{1-\delta}\right] =c\delta\left(\frac{1-\delta^T}{1-\delta}\right)
-\end{align}
-\begin{align}
-    c=\bar{B}(1)\left(\frac{1-\delta}{\delta}\right)\frac{1}{1-\delta^T}=B(1)\left[r\frac{(1+r)^T}{(1+r)^T-1}\right]
-\end{align}
-
-\begin{align}
-    \boxed{c_f(r,T):=\frac{r(1+r)^T}{(1+r)^T-1}} \implies c=\bar{B}(1)c_f(r,T)
-\end{align}
-Balance factor:
-\begin{align}
-    \bar{B}(t)=\bar{B}(1)\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]
-\end{align}
-\begin{align}
-    \boxed{B_f(t,r,T)=\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]} \implies \bar{B}(t)=\bar{B}(1)B_f(t,r,T)
-\end{align}
-\begin{align}
-    \bar{I}(t) = r\bar{B}(1)B_f(t,r,T)
-\end{align}
-Amortization factor:
-\begin{align}
-    A_f(t,r,T) = c_f(r,T)-rB_f(t,r,T)
-\end{align}
-\begin{align}
-    \boxed{A_f(t,r,T)=\frac{r(1+r)^{t-1}}{(1+r)^T-1}} \label{eq:afactor}
-\end{align}
-
-
-\begin{theorem}{1.1 (Telescopic Amortizations)}{} \label{teo:1}
-If A is the function defined in (\ref{eq:afactor}) then:
-\[
-\prod^{t-1}_{s=1}(1-A(1,r,T-s+1))=1-\sum^{t-1}_{s=1}A(s,r,T)
-\]
-\end{theorem}
-
-\begin{proof}{}{} Lets define
-\[
-E_1=\prod^{t-1}_{s=1}(1-A(1,r,T-s+1)), \\
-E_2 =1-\sum^{t-1}_{s=1}A(s,r,T)
-\]
-and
-\[
-\delta =1/(1+r)
-\]
-Working on $E_1$ and setting $\xi=1+r$:
-\begin{align}
-1-A(1,r,T-s+1) = \frac{(1+r)^{T-s+1}-1-r}{(1+r)^{T-s+1}-1}=\frac{\xi^{T-s+1}-\xi}{\xi^{T-s+1}-1} \nonumber
-\end{align}
-
-\begin{align}
-\implies E_1 =& \frac{(\xi^T-\xi)}{(\xi^T-1)}\times \frac{(\xi^{T-1}-\xi)}{(\xi^{T-1}-1)} \times \frac{(\xi^{T-2}-\xi)}{(\xi^{T-2}-1)} \times ... \times \frac{(\xi^{T-t+1}-\xi)}{(\xi^{T-t+1}-1)} \nonumber\\
-=&\xi^t \frac{(\xi^{T-1}-1)}{(\xi^T-1)}\times \frac{(\xi^{T-2}-1)}{(\xi^{T-1}-1)} \times \frac{(\xi^{T-3}-1)}{(\xi^{T-2}-1)} \times ... \times \frac{(\xi^{T-t}-1)}{(\xi^{T-t+1}-1)} \nonumber\\
-=&\frac{\xi^T-\xi^t}{\xi^T-1} \label{eq:e1}
-\end{align}
-
-Working on $E_2$:
-\begin{align}
-A(s,r,T) = \frac{r(1+r)^{s-1}}{(1+r)^{T}-1}=(\xi-1)\frac{\xi^{s-1}}{\xi^{T}-1} \nonumber
-\end{align}
-
-\begin{align}
-\implies E_2 =& 1-\frac{(\xi-1)(1+\xi+\xi^2+\xi^3+...+\xi^{t-1})}{\xi^T-1}\nonumber\\
-=&\frac{\xi^T-\xi^t}{\xi^T-1} 
-\end{align}
-$\therefore E1=E2$
-\end{proof}
-
-%  Page on setup examples
-\section{Alternative setups for Incremental Profit computation}
-
-
-
-\subsection{Standard model \label{can}} 
-\begin{figure}[H]
-  \centering
-      \includegraphics[width=.3\textwidth]{Graph2.pdf} 
- \caption{Graph for computations}
- \label{fig:graph2}
-\end{figure}
-
-\begin{center} % <-- optional b
-\[ % <-- step a
-\begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
-\mbox{Variable} &\mbox{Notation} & \mbox{Calculation}\\ \hline
-\mbox{Balance in presence of risk }  & B(t)  & B(t)\\
-\mbox{Default  }  & D(t) & p_d(t) B(t)\\
-\mbox{Full Prepayment}  & C(t) & p_c(t) B(t)\\
-\mbox{Prepayment  }  & P(t) & p_p(t)B(t)\\
-\mbox{Amortization}  & A(t) &(1-p_d(t)-p_c(t)-p_p(t)) B(t)A_f(1,r,T-t+1))\\
-\mbox{Interest }  & I(t) & (1-p_d(t)-p_c(t)-p_p(t))B(t)r\\
-\mbox{Principal   }  &  B(1) & B\\
-\hline
-\end{array} % <-- step e
-\] % <-- step e
-\end{center}
-
-Notice that we defined $B(t)$ as the Loan Balance subject to risk (Conductual affected Loan Balance), as opposed to $\bar{B}(t)$, which is the Risk Free Loan Balance (Contractual Balance).  Given this definitions we can compute the recursive form for the balance function $B(t)$
-\begin{align}
-B(t+1) =& B(t)[1-p_d(t)-p_c(t)-p_p(t)-(1-p_d(t)-p_c(t)-p_p(t))A(1,r,T-t+1) ] \nonumber\\
-     =&
-    B(t)(1-p_d(t)-p_c(t)-p_p(t))(1-A(1,r,T-t+1)) \label{eq:bbar1}\
-\end{align}
-Notice that (\ref{eq:bbar1}) is a first order equation in difference which can be easily solved as.
-\begin{align}
-    B(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(s)-p_c(s)-p_p(s))B
-\end{align}
-Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
-\begin{align}
-    B(t) &=\prod^{t-1}_{s=1} (1-p_d(s)-p_c(s)-p_p(s))\bar{B}(t) \nonumber\\
-    &=S(t)\bar{B}(t)
-\end{align}
-
-\subsection{Prepayment dependent on initial balance}
-\begin{figure}[H]
-  \centering
-      \includegraphics[width=.3\textwidth]{Graph1.pdf} 
- \caption{Topological Sort for computations}
- \label{fig:Test}
-\end{figure}
-
-\begin{center} % <-- optional b
-\[ % <-- step a
-\begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
-\mbox{Variable} &\mbox{Notation} & \mbox{Calculation}\\ \hline
-\mbox{Balance in presence of risk }  & B(t)  & B(t)\\
-\mbox{Default  }  & D(t) & p_d(t) B(t)\\
-\mbox{Amortization}  & A(t) &(1-p_d(t)) B(t)A(1,r,T-t+1))\\
-\mbox{Interest }  &  I(t) & (1-p_d(t))B(t)r\\
-\mbox{Full Prepayment}  & C(1) & p_c(t) B(t)[1-p_d(t)-(1-p_d(t))A(1,r,T-t+1)]\\
-\mbox{Principal   }  &  B(1) & B\\
-\mbox{Prepayment  }  & P(t) & p_p(t)B\\
-\hline
-\end{array} % <-- step e
-\] % <-- step e
-\end{center}
-
-  Given this definitions we can compute the recursive form for the balance function $B(t)$
-\begin{align}
-\scriptstyle
-     \bar{B}(t+1) =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)(1-p_d(t)-(1-p_d(t))A(1,r,T-t+1))-(1-p_d(t))A(1,r,T-t+1) ]-p_p(t) \bar{B}(1) \nonumber\\
-    =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)+p_d(t)p_c(t)+p_c(t)(1-p_d(t)A(1,r,T-t+1)-(1-p_d(t))A(1,r,T-t+1)]
-    -p_p(t) \bar{B}(1) \nonumber\\
-    =&\scriptstyle
-    \bar{B}(t)[ (1-p_d(t))(1-p_c(t))-(1-p_d(t))(1-p_c(t))A(1,r,T-t+1)]
-    -p_p(t) \bar{B}(1) \nonumber\\
-     =&\scriptstyle
-    \bar{B}(t)(1-p_d(t))(1-p_c(t))(1-A(1,r,T-t+1))
-    -p_p(t) \bar{B}(1) \label{eq:bbar}\
-\end{align}
-Notice that (\ref{eq:bbar}) is a first order equation in difference which can be easily solved as.
-\begin{align}
-    B(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(s))(1-p_p(s))B-\sum (\prod a_s) b_k
-\end{align}
-Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
-\begin{align}
-    B(t) &=\prod^{t-1}_{s=1} (1-p_d(s))(1-p_p(s))\bar{B}(t)-\sum (\prod a_s) b_k \nonumber\\
-    &=S(t)\bar{B}(t)-\sum (\prod a_s) b_k 
 \end{align}
