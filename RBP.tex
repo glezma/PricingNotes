@@ -1,10 +1,19 @@
 
 \chapter{Risk Based Pricing}
 \section{ Preliminary definitions} 
+We will start by characterizing the payouts for a constant installment loan under the assumption that there is no risk. In this world, there is only the contractual cash-flow and no risk of any kind (e.g. prepayment risk, default risk,etc). In section (1.3) we will introduce those risk factors from first principles.
+\footnote{The reader familiarized with modern mathematical asset pricing will recognize the similarity of this approach with the typical Q and P measure approach, - i.e. studying first the asset price under a risk neutral world (measure Q) and then connecting with the real world which is non-risk-neutral (P measure) }
+\\
+\\
+The connection between the risk free world and the real world will be established through the theorem of telescopic amortizations in section (1.3). To the best of my knowledge, this theorem has not been established anywhere else but it turns out to be extremely useful for two reasons: First, using this theorem we can easily stablish a closed form mathematical representation of the Economic Profit of a loan from first priciples even allowing for diferent modeling choices for the sequence of computations. 
+\\ 
+\\
+Second, the use of the theorem allow for such a simple representation that its programatic implementation does not need any for-loops of any kind, freeing the space for using the vectorization approach that is widely used in data intensive applications in statistics and deep learning.
+
 
 \renewcommand{\arraystretch}{1.5} % <-- optional a
 \begin{center} % <-- optional b
-\[ % <-- step a
+\begin{math} % <-- step a
 \begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
 \mbox{Element} & \mbox{Notation}\\ \hline
 \mbox{Client Interest Rate}  & r \\
@@ -13,99 +22,106 @@
 \mbox{Contractual Maturity }  & T \\
 \hline
 \end{array} % <-- step e
-\] % <-- step e
+\end{math}% <-- step e
 \end{center}
-
-\subsection{Default and Prepayment probabilities:}
-$ \forall t \in \{1,2,...T\}$
-\[ 
-\begin{array}{rr} 
-   p_p(t)  :&  \mbox{
-   Probability that the loan will prepay at time t given that it has survived to that point } \\
-   p_d(t)  : &  \mbox{
-   Probability that the loan will default at time t given that it has survived to that point
-   }
-\end{array} \noindent
-\] 
-
- \subsection{Survival function:}
-$S(t)$ :   Probability that a loan survives until period t 
-\begin{align}
-S(t) & = \Pi_{s=1}^t (1-p_d(s) - p_p(s)) \\
- & = (1-p_d(1) - p_p(1))\times(1-p_d(2) - p_p(2))\times...\times(1-p_d(t) - p_p(t)) \nonumber
-\end{align}
-
-\subsection{Balance function: }
-The Current Balance function $\bar{B}(t)$ is the remaining balance left at time $t-1$ for a loan with principal $B=\bar{B}(1)$ and in absence of any prepayment or default risk. For non conventional loan payments this function might not have a closed form solution. 
-
-
-\paragraph{Constant installments:} The remaining balance at time $t$ for a loan with principal (Balance at t=0) B is given by 
-\begin{align}
-\bar{ B}(t)&=B\frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1}
-\end{align}
-\begin{align}
-\bar{ I}(t)&=r\times \bar{ B}(t)
-\end{align}
-The acute reader will notice that the definition of $\bar{B}(t)$, in terms of the remaining balance left at time $t-1$ , was given so that we can state such a simple equation for $\bar{I}(t)$.
-
-
-\paragraph{Constant amortization: } The remaining balance at time $t$ for a loan with principal (Balance at t=0) B is given by:
-
-\begin{align}
-\bar{B}(t)&=B \times (1-\frac{t-1}{T})
-\end{align}
 
 
 
 %Page on setup equations
-\section{Financial Math operators}
-\subsection{Constant Installments}
-We can define a $c_f$ function to compute constant installments by defining the following:
+\section{Payment schedule in a risk free world}
+\subsection{The Constant Installment Function}
+We can define a $c_f(.)$ function to compute constant installments by defining the following equality involving $c$ (the constant installments), $\bar{B}(1)$ (the lended principal), $r$ (the loan interest rate) and $T$ the contractual maturity.
 \begin{align}
-    \bar{B}(1) &= \frac{c}{(1+r)}+\frac{c}{(1+r)^2}+\frac{c}{(1+r)^3}+...++\frac{c}{(1+r)^T} \nonumber\\
+    \bar{B}(1) &= \frac{c}{(1+r)}+\frac{c}{(1+r)^2}+\frac{c}{(1+r)^3}+...+\frac{c}{(1+r)^T}
 \end{align}
 Setting $\delta=\frac{1}{1+r}$
 \begin{align}
-    \bar{B}(1) &==c\delta[1+\delta+\delta^2+\delta^3+\delta^4+...+\delta^{T-1}] \nonumber \\
+    \bar{B}(1) &=c\delta[1+\delta+\delta^2+\delta^3+\delta^4+...+\delta^{T-1}] \nonumber \\
     &=c\delta\left[\frac{1}{1-\delta}-\delta^T\frac{1}{1-\delta}\right] =c\delta\left(\frac{1-\delta^T}{1-\delta}\right)
 \end{align}
+Solving for $c$ we stablish the definition for $c_f(r,T)$
 \begin{align}
     c=\bar{B}(1)\left(\frac{1-\delta}{\delta}\right)\frac{1}{1-\delta^T}=B(1)\left[r\frac{(1+r)^T}{(1+r)^T-1}\right]
 \end{align}
 
 \begin{align}
-    \boxed{c_f(r,T):=\frac{r(1+r)^T}{(1+r)^T-1}} \implies c=\bar{B}(1)c_f(r,T)
+    \boxed{c_f(r,T):=\frac{r(1+r)^T}{(1+r)^T-1}} \implies c=\bar{B}(1)c_f(r,T) \label{eq:c}
 \end{align}
-Balance factor:
+\subsection{The Balance Function: }
+The Current Balance function $\bar{B}(t)$ is the remaining balance left at time $t-1$ for a loan with principal $B=\bar{B}(1)$ and in absence of any prepayment or default risk \footnote{The acute reader will notice that the definition of $\bar{B}(t)$, in terms of the remaining balance left at time $t-1$ , was given so that we can state such a simple equation for the earned contractual interest $\bar{I}(t)=r\bar{B}(t)$ and eliminate dependence on past indexes $t$.}. For a constant installments loan, the remaining balance at time $t$ for a loan with principal (Balance at t=0) B is given by 
+\begin{align}
+\bar{B}(t)&=B\frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \label{eq:bbar1}
+\end{align}
+
+To establish equation (\ref{eq:bbar1}) we start from first principles noticing that 
+the remaining balance is the capitalized previous balance minus the installment 
+
+\begin{align}
+\bar{B}(t)=\bar{B}(t-1)(1+r)-c \label{eq:bbar2}
+\end{align}
+Equation (\ref{eq:bbar2}) is a difference equation of first order that can be solved recursively with initial value given by the principal $B$ as follows:
+% \begin{align}
+% \bar{ I}(t)&=r\times \bar{ B}(t)
+% \end{align}
+% \paragraph{Constant amortization: } The remaining balance at time $t$ for a loan with principal (Balance at t=0) B is given by:
+
+% \begin{align}
+% \bar{B}(t)&=B \times (1-\frac{t-1}{T})
+% \end{align}
+\begin{align}
+    \bar{B}(1)&=B \nonumber \\
+    \bar{B}(2)&=\bar{B}(1)(1+r)-c = \bar{B}(1+r)-c \nonumber \\
+    \bar{B}(3)&=\bar{B}(2)(1+r)-c = \bar{B}(1+r)^2-c(1+r)-c \nonumber \\
+    \bar{B}(4)&=\bar{B}(3)(1+r)-c = \bar{B}(1+r)^3-c(1+r)^2-c(1+r)-c \nonumber \\
+    \bar{B}(5)&=\bar{B}(4)(1+r)-c = \bar{B}(1+r)^4-c(1+r)^3-c(1+r)^2-c(1+r)-c \nonumber 
+\end{align}  
+\begin{align}
+    \bar{B}(t)&= \bar{B}(1+r)^{t-1}-c \sum_{s=0}^{t-2} (1+r)^s 
+\end{align}
+Using the fact that: If $S_n = 1+x+x^2+x^3+...+x^n \implies  S_n=\frac{1-x^{n+1}}{1-x}$
+\begin{align}
+    \bar{B}(t)&= \bar{B}(1+r)^{t-1}-c \left[ \frac{(1+r)^{t-1}-1}{r} \right]  \label{eq:bprev}
+\end{align}
+Replacing (\ref{eq:c}) in (\ref{eq:bprev})
+
 \begin{align}
     \bar{B}(t)=\bar{B}(1)\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]
 \end{align}
 \begin{align}
     \boxed{B_f(t,r,T)=\left[ \frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \right]} \implies \bar{B}(t)=\bar{B}(1)B_f(t,r,T)
 \end{align}
-\begin{align}
-    \bar{I}(t) = r\bar{B}(1)B_f(t,r,T)
-\end{align}
-Amortization factor:
-\begin{align}
-    A_f(t,r,T) = c_f(r,T)-rB_f(t,r,T)
-\end{align}
+% \begin{align}
+%     \bar{I}(t) = r\bar{B}(1)B_f(t,r,T)
+% \end{align}
+\subsection{Amortization factor:}
+Finally, we define the amortization factor noticing the constant installment should be equal to the interest payment plus the amortization.
+
+\begin{equation}
+    A_f(t,r,T) = c_f(r,T)-rB_f(t,r,T) \label{eq:af1}
+\end{equation}
 \begin{align}
     \boxed{A_f(t,r,T)=\frac{r(1+r)^{t-1}}{(1+r)^T-1}} \label{eq:afactor}
 \end{align}
+\begin{corollary}{1}
+Using (\ref{eq:bbar2}) and (\ref{eq:af1}) we can state that:
+\[
+1-\sum_{s=1}^{t-1} A_f(s,r,T)=B_f(t)
+\]
+\end{corollary} 
 
-
+\section{Introducing Risk Events in Payment schedule}
+Last section we defined financial math operators to define a loan payment schedule in absence of any risk events. In this section we introduce risk events including defaults and prepayments. Lets start with the Theorem of Telescopic Amortizations which will be key to connect the risk free schedule with the risky schedule.
 \begin{theorem}{1.1 (Telescopic Amortizations)}{} \label{teo:1}
 If A is the function defined in (\ref{eq:afactor}) then:
 \[
-\prod^{t-1}_{s=1}(1-A(1,r,T-s+1))=1-\sum^{t-1}_{s=1}A(s,r,T)
+\prod^{t-1}_{s=1}(1-A_f(1,r,T-s+1))=1-\sum^{t-1}_{s=1}A_f(s,r,T) =B_f(t,r,T)
 \]
 \end{theorem}
 
 \begin{proof}{}{} Lets define
 \[
-E_1=\prod^{t-1}_{s=1}(1-A(1,r,T-s+1)), \\
-E_2 =1-\sum^{t-1}_{s=1}A(s,r,T)
+E_1=\prod^{t-1}_{s=1}(1-A_f(1,r,T-s+1)), \\
+E_2 =1-\sum^{t-1}_{s=1}A_f(s,r,T)
 \]
 and
 \[
@@ -113,7 +129,7 @@ and
 \]
 Working on $E_1$ and setting $\xi=1+r$:
 \begin{align}
-1-A(1,r,T-s+1) = \frac{(1+r)^{T-s+1}-1-r}{(1+r)^{T-s+1}-1}=\frac{\xi^{T-s+1}-\xi}{\xi^{T-s+1}-1} \nonumber
+1-A_f(1,r,T-s+1) = \frac{(1+r)^{T-s+1}-1-r}{(1+r)^{T-s+1}-1}=\frac{\xi^{T-s+1}-\xi}{\xi^{T-s+1}-1} \nonumber
 \end{align}
 
 \begin{align}
@@ -124,15 +140,33 @@ Working on $E_1$ and setting $\xi=1+r$:
 
 Working on $E_2$:
 \begin{align}
-A(s,r,T) = \frac{r(1+r)^{s-1}}{(1+r)^{T}-1}=(\xi-1)\frac{\xi^{s-1}}{\xi^{T}-1} \nonumber
+A_f(s,r,T) = \frac{r(1+r)^{s-1}}{(1+r)^{T}-1}=(\xi-1)\frac{\xi^{s-1}}{\xi^{T}-1} \nonumber
 \end{align}
 
 \begin{align}
 \implies E_2 =& 1-\frac{(\xi-1)(1+\xi+\xi^2+\xi^3+...+\xi^{t-1})}{\xi^T-1}\nonumber\\
 =&\frac{\xi^T-\xi^t}{\xi^T-1} 
 \end{align}
-$\therefore E1=E2$
+$\therefore E1=E2$\\
+Finally, the second equality follows directly from Corollary 1.
 \end{proof}
+
+\subsection{Default and Prepayment probabilities and the survival function:}
+We define de conditional probabilities $p_p(t)$ and $p_d(t)$ $\forall t \in \{1,2,...T\}$ as follows:
+\begin{align}
+   p_p(t)  :&  \mbox{
+   Probability that the loan will prepay at time t given that it has survived to that point } \nonumber \\
+   p_d(t)  : &  \mbox{
+   Probability that the loan will default at time t given that it has survived to that point 
+   } \nonumber
+\end{align} \noindent
+ Given these definitions we can establish $S(t)$, the probability that a loan survives until period $t$ using the pigeon hole priciple. 
+\begin{align}
+S(t) & = (1-p_d(1) - p_p(1))\times(1-p_d(2) - p_p(2))\times...\times(1-p_d(t) - p_p(t)) \nonumber\\ 
+ & =  \Pi_{s=1}^t (1-p_d(s) - p_p(s))  
+\end{align}
+
+
 
 %  Page on setup examples
 \section{Alternative setups for Incremental Profit computation}
@@ -150,43 +184,56 @@ In this model prepayments/full prepayment, default probability are expressed as 
 
 \begin{center} % <-- optional b
 %\[ % <-- step a
+\begin{math}
 \begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
 \mbox{Variable} &\mbox{Notation} & \mbox{Calculation}\\ \hline
 \mbox{Balance in presence of risk }  & B(t)  & B(t)\\
 \mbox{Default  }  & D(t) & p_d(t) B(t)\\
 \mbox{Full Prepayment}  & C(t) & p_c(t) B(t)\\
 \mbox{Prepayment  }  & P(t) & p_p(t)B(t)\\
-\mbox{Amortization}  & A(t) &(1-p_d(t)-p_c(t)-p_p(t)) B(t)A_f(1,r,T-t+1))\\
-\mbox{Interest }  & I(t) & (1-p_d(t)-p_c(t)-p_p(t))B(t)r\\
+\mbox{Amortization}  & A(t) &(B(t)-D(t)-C(t)-P(t)) A_f(1,r,T-t+1)\\
+\mbox{Interest }  & I(t) & (B(t)-D(t)-C(t)-P(t))r\\
 \mbox{Principal   }  &  B(1) & B\\
+\mbox{Risky balance next period   }  &  B(t+1) & B(t)-D(t)-C(t)-P(t)-A(t)\\
 \hline
 \end{array} % <-- step e
 %\] % <-- step e
-\captionof{table}{Computation for Model 1: Standard Model} 
+\end{math}
+\captionof{table}{Computation for Model 1: Standard Model} \label{table:1}
 \end{center}
 
 Notice that we defined $B(t)$ as the Loan Balance subject to risk (Conductual affected Loan Balance), as opposed to $\bar{B}(t)$, which is the Risk Free Loan Balance (Contractual Balance).  Given this definitions we can compute the recursive form for the balance function $B(t)$
 \begin{align}
-B(t+1) =& B(t)[1-p_d(t)-p_c(t)-p_p(t)-(1-p_d(t)-p_c(t)-p_p(t))A(1,r,T-t+1) ] \nonumber\\
+B(t+1) =& B(t)[1-p_d(t)-p_c(t)-p_p(t)-(1-p_d(t)-p_c(t)-p_p(t))A_f(1,r,T-t+1) ] \nonumber\\
      =&
-    B(t)(1-p_d(t)-p_c(t)-p_p(t))(1-A(1,r,T-t+1)) \label{eq:bbar1}\
+    B(t)(1-p_d(t)-p_c(t)-p_p(t))(1-A_f(1,r,T-t+1)) \label{eq:bbar1}\
 \end{align}
+
+
 Notice that (\ref{eq:bbar1}) is a first order equation in difference which can be easily solved as.
 \begin{align}
-    B(t) =\prod^{t-1}_{s=1} (1-A(1,r,T-s+1))(1-p_d(s)-p_c(s)-p_p(s))B
+    B(t) =\prod^{t-1}_{s=1} (1-A_f(1,r,T-s+1))(1-p_d(s)-p_c(s)-p_p(s))B
 \end{align}
 Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
 \begin{align}
     B(t) &=\prod^{t-1}_{s=1} (1-p_d(s)-p_c(s)-p_p(s))\bar{B}(t) \nonumber\\
-    &=S(t)\bar{B}(t) \nonumber
+    &=S(t-1)\bar{B}(t) \nonumber
 \end{align}
 \begin{align}
     \boxed{B(t)=S(t-1)\bar{B}(t) } \label{eq:model1}
 \end{align}
 Equation \ref{eq:model1} states a very simple relation between the theoretical/contractual balance $\bar{B}(t)$ and the behavioral balance $B(t)$. We have derived this equation from a first principles approach through the Theorem of Telescopic Amortization (\ref{teo:1}). This equation represent a very powerful shortcut not only for using intuition, since the behavioral balance can be thought of as the contractual balance adjusted by the survival probability, but also for implementing the model programatically using vectorization instead of recursive loops over the different points in the payment schedule, the last alternative can be very hard to maintain and compute, not to mention its proneness to error.
+\begin{corollary}{: Interest in model 1}
+Given the interest rate definition in Table (\ref{table:1}) and equation (\ref{eq:model1}) we can state that:
+\begin{align}
+    \boxed{I(t)=S(t)\bar{B}(t)r}
+\end{align}
+
+
+\end{corollary}
 
 \subsection{Prepayment dependent on initial balance}
-This model is a variation of the previous one in which the prepayment probabiliy is a proportion of the initial balance/principal $B(1)$
+This model is a variation of the previous one in which the prepayment probabiliy is a proportion of the initial balance/principal $B(1)$. In this setup, the prepayment amount will be define in function of the marginal probability of default $p^m_p(t)$ and not the conditional probability $p_p(t)$ 
 \begin{figure}[H]
   \centering
       \includegraphics[width=.3\textwidth]{Graph1.pdf} 
@@ -196,17 +243,20 @@ This model is a variation of the previous one in which the prepayment probabiliy
 
 \begin{center} % <-- optional b
 % \[ % <-- step a
+\begin{math}
 \begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
 \mbox{Variable} &\mbox{Notation} & \mbox{Calculation}\\ \hline
 \mbox{Balance in presence of risk }  & B(t)  & B(t)\\
 \mbox{Default  }  & D(t) & p_d(t) B(t)\\
-\mbox{Amortization}  & A(t) &(1-p_d(t)) B(t)A(1,r,T-t+1))\\
-\mbox{Interest }  &  I(t) & (1-p_d(t))B(t)r\\
-\mbox{Full Prepayment}  & C(1) & p_c(t) B(t)[1-p_d(t)-(1-p_d(t))A(1,r,T-t+1)]\\
+\mbox{Amortization}  & A(t) &(B(t)-D(t)) A_f(1,r,T-t+1)\\
+\mbox{Interest }  &  I(t) & (B(t)-D(t))r\\
+\mbox{Full Prepayment}  & C(t) & p_c(t) [B(t)-D(t)-A(t)]\\
 \mbox{Principal   }  &  B(1) & B\\
-\mbox{Prepayment  }  & P(t) & p_p(t)B\\
+\mbox{Prepayment  }  & P(t) & p_p^m(t)B\\
+\mbox{Risky balance next period  }  & B(t+1) & B(t)-D(t)-C(t)-P(t)-A(t)\\
 \hline
 \end{array} % <-- step e
+\end{math}
 % \] % <-- step e
 \captionof{table}{Computation for Model 2: Prepayment Dependent on Initial Balance} 
 \end{center}
@@ -214,35 +264,40 @@ This model is a variation of the previous one in which the prepayment probabiliy
   Given this definitions we can compute the recursive form for the balance function $B(t)$
 \begin{align}
 \scriptstyle
-     \bar{B}(t+1) =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)(1-p_d(t)-(1-p_d(t))A(1,r,T-t+1))-(1-p_d(t))A(1,r,T-t+1) ]-p_p(t) \bar{B}(1) \nonumber\\
-    =&\scriptstyle \bar{B}(t)[1-p_d(t)-p_c(t)+p_d(t)p_c(t)+p_c(t)(1-p_d(t)A(1,r,T-t+1)-(1-p_d(t))A(1,r,T-t+1)]
-    -p_p(t) \bar{B}(1) \nonumber\\
+     B(t+1) =&\scriptstyle B(t)[1-p_d(t)-p_c(t)(1-p_d(t)-(1-p_d(t))A_f(1,r,T-t+1))-(1-p_d(t))A_f(1,r,T-t+1) ]-p_p^m(t) B(1) \nonumber\\
+    =&\scriptstyle B(t)[1-p_d(t)-p_c(t)+p_d(t)p_c(t)+p_c(t)(1-p_d(t)A_f(1,r,T-t+1)-(1-p_d(t))A_f(1,r,T-t+1)]
+    -p_p^m(t) B(1) \nonumber\\
     =&\scriptstyle
-    \bar{B}(t)[ (1-p_d(t))(1-p_c(t))-(1-p_d(t))(1-p_c(t))A(1,r,T-t+1)]
-    -p_p(t) \bar{B}(1) \nonumber\\
+    B(t)[ (1-p_d(t))(1-p_c(t))-(1-p_d(t))(1-p_c(t))A_f(1,r,T-t+1)]
+    -p_p^m(t) B(1) \nonumber\\
      =&\scriptstyle
-    \bar{B}(t)(1-p_d(t))(1-p_c(t))(1-A(1,r,T-t+1))
-    -p_p(t) \bar{B}(1) \label{eq:bbar}\
+    B(t)(1-p_d(t))(1-p_c(t))(1-A_f(1,r,T-t+1))
+    -p_p^m(t) B(1) \label{eq:bbar}\
 \end{align}
-Notice that (\ref{eq:bbar}) is a first order equation in difference of type $x(t+1) = \alpha(t)x(t) + \beta(t)$  where $\alpha(t):=(1-p_d(t))(1-p_c(t))(1-A(1,r,T-t+1))$  , $\beta(t):= -p_p(t) \bar{B}(1)$, $x(t):= \bar{B}(t)$ and the initial condition given by the lended principal $x(1) = \bar{B}(1) = B$. This equation can be easily solved as: 
+Notice that (\ref{eq:bbar}) is a first order equation in difference of type $x(t+1) = \alpha(t)x(t) + \beta(t)$  where $\alpha(t):=(1-p_d(t))(1-p_c(t))(1-A_f(1,r,T-t+1))$  , $\beta(t):= -p_p^m(t) \bar{B}(1)$, $x(t):= \bar{B}(t)$ and the initial condition given by the lended principal $x(1) = \bar{B}(1) = B$. This equation can be easily solved as: 
 \begin{align}
-    x(t+1) = x_1 \prod_{s=1}^t \alpha(s) + \sum_{k=1}^{t-2} \left[\beta(k) \prod_{s=k+1}^{t-1}\alpha(s)\right]+\beta(t-1)
+    x(t) = x_1 \prod_{s=1}^{t-1} \alpha(s) + \sum_{k=1}^{t-2} \left[\beta(k) \prod_{s=k+1}^{t-1}\alpha(s)\right]+\beta(t-1)
 \end{align}
 Plugging back the definitions of $\alpha(t)$, $\beta(t)$ and ,$x(t)$ we get:
 \begin{align}
-    B(t+1) =&\prod^{t}_{s=1} (1-p_d(s))(1-p_p(s))(1-A(1,r,T-s+1))B \nonumber\\
-            &-\sum_{k=1}^{t-1}\left[p_p(t) B \prod_{s=k+1}^{t-1}(1-p_d(t))(1-p_c(t))(1-A(1,r,T-t+1))\right]-p_p(t-1) B
+    B(t) =&\prod^{t-1}_{s=1} (1-p_d(s))(1-p_p(s))(1-A_f(1,r,T-s+1))B \nonumber\\
+            &-\sum_{k=1}^{t-2}\left[p_p^m(k) B \prod_{s=k+1}^{t-1}(1-p_d(s))(1-p_c(s))(1-A_f(1,r,T-s+1))\right]-p_p^m(t-1) B
 \end{align}
-Using the theorem of Telescopic Amortizations (\ref{teo:1}), the definitions for survival curve and lagging t one period we can state the conductual balance $B(t)$ as a function of the contractual balance $\bar{B}(t)$.
+Using the theorem of Telescopic Amortizations (\ref{teo:1}) and defining $\Tilde{S}(t):=\Pi_{s=0}^t(1-p_d(s))(1-p_c(s))$ we can state the behavioral balance $B(t)$ as a function of the contractual balance $\bar{B}(t)$.
 \begin{align}
-    B(t) &=\prod^{t-1}_{s=1} (1-p_d(s))(1-p_p(s))\bar{B}(t)-\sum_{k=1}^{t-2} \left[ p_p(k)B \frac{S(t-2) }{S(k) }  \frac{ \bar{B}(t-1)}{ \bar{B}(k+1)}\right] \nonumber\\
-    &=S(t-1)\bar{B}(t)-\sum_{k=1}^{t-2} \left[ p_p(k)B \frac{S(t-2) }{S(k) }  \frac{ \bar{B}(t-1)}{ \bar{B}(k+1)}\right] \nonumber 
+    B(t) &=\Tilde{S}(t-1)\bar{B}(t)-\sum_{k=1}^{t-2} \left[ p_p^m(k)B \frac{\Tilde{S}(t-2) }{\Tilde{S}(k) }  \frac{ \bar{B}(t-1)}{ \bar{B}(k+1)}\right] -p_p^m(t-1) B\nonumber\\
+    &=\Tilde{S}(t-1)\bar{B}(t)-\sum_{k=1}^{t-1} \left[ p_p^m(k)B \frac{\Tilde{S}(t-1) }{\Tilde{S}(k) }  \frac{ \bar{B}(t)}{ \bar{B}(k+1)}\right] \nonumber  \\
+    &=\Tilde{S}(t-1)\left(1-\sum_{k=1}^{t-1}   \frac{p_p^m(k)B }{\Tilde{S}(k) \bar{B}(k+1)} \right)\bar{B}(t) \nonumber 
 \end{align}
-
+We define conveniently $S(t)$ as:
 \begin{align}
-    \boxed{B(t)=S(t-1)\bar{B}(t)-\sum_{k=1}^{t-2} \left[ p_p(k)B \frac{S(t-2) }{S(k) }  \frac{ \bar{B}(t-1)}{ \bar{B}(k+1)}\right]  } \label{eq:model2}
+S(t-1):=\Tilde{S}(t-1)\left(1-\sum_{k=1}^{t-1}   \frac{p_p^m(k)B }{\Tilde{S}(k) \bar{B}(k+1)} \right)^{+}  \label{eq:model3}
 \end{align}
-Equation (\ref{eq:model2}) is analogous to equation (\ref{eq:model1}) with an aditional term that represents a weighted sum of the last prepayment amounts where the last prepaymet has a weight of one. Equivalently, instead of excluding the prepayment amount through the survival factor $S(t-1)$ we are substracting these amounts outside the $S(t-1)\bar{B}(t)$ factor.
+So that we can state that:
+\begin{align}
+    \boxed{B(t)=S(t-1)\bar{B}(t)  } \label{eq:model2}
+\end{align}
+Equation (\ref{eq:model3}) is analogous to equation (\ref{eq:model1}) with an additional term that represents a weighted sum of the last prepayment amounts where the last prepayment has a weight of one. 
 \section{ Terms included in the incremental profit (CLV)}
 \subsection{ Interest on loans: }
 \begin{align}
@@ -250,43 +305,52 @@ LI(t) = S(t)\bar{ B}(t)r \label{eq:li}
 \end{align}
 Equation (\ref{eq:li}) will be proved in section (\ref{can}). For now lets just use our intuition and state that each dollar has an unconditional probability to survive up to time $t$ of $S(t)$ 
 \subsection{  Cost of Funds: }
+This term represents the amount of balance the lender has to finance through the cost of funds $r_c$. 
 \begin{align}
+    COF(t) = S(t)\bar{B}_c(t)r_c
+\end{align}
+Notice that the ALM unit will have to fund the behavioral expected balance, i.e the remaning balance after deducting prepayments (either full or partial) and defaults. 
+\footnote{ Another valid alternative might be the one suggested by Phillips (2018):
+$
 COF(t) = S_c(t)\bar{ B}_c(t)r_c
-\end{align}
-Where: 
-\begin{align}
+$,
+where: 
+$
 S_c(t)= \Pi_{s=0}^t [1- p_p(s)-(1-LGD(s))p_d(s) ]
-\end{align}
-The last formula can be viewed as the complement for the probability of death for 1 dollar. If a prepayment event 
+$}
 
-\subsection{ Equity Benefit (Capital Rebate): }
+
+\subsection{ Equity Benefit (Capital Rebate) and Equity Capital Charge: }
+Since any loan has to be financed by both debt and capital, let's assume the fraction of capital the lender has to mantain for each lended dollar is $\alpha_t$. To be consistent with the left and right side of the balance sheet, we need to take into account both the additional revenue of investing the amount of required capital (Equity Benefit) and also the equity charge that the shareholder demands.
+
 \begin{align}
-EB(t) = \alpha S(t)\bar{ B}(t) r_c
+EB(t) = \alpha_t S(t)\bar{ B}(t) r_c
+\end{align}
+\begin{align}
+ EC(t) =  \alpha_t S(t)\bar{ B}(t) r_e
 \end{align}
 
-\subsection{ Fees Additional Source of revenue: }
+\subsection{ Loss from Default: }
+So far, we have included the effect of the client's behavior on the interest income and outcome. In this term, we will also incorporate the loss of capital in which the lending entity incur when a client defaults. 
+\begin{align}
+EL(t) =  p_d(t)LGD(t)S(t)\bar{ B}(t) 
+\end{align}
+
+\subsection{ Fees and Servicing Costs: }
+The lending entity can get additional source of revenue or incur in costs that do not depend on the lended amount can be written as:
 \begin{align}
 F(t) = f S(t)
 \end{align}
-
-\subsection{ Servicing Costs: }
 \begin{align}
 SC(t) =  \sigma S(t)
 \end{align}
 
-\subsection{ Loss from Default: }
-\begin{align}
-EL(t) =  p_d(t)LGD(t)S(t)\bar{ B}(t) 
-\end{align}
+
 \subsection{Recovery costs}
 \begin{align}
 C(t) = c\times p_d(t) S(t)
 \end{align}
 
-\subsection{ Equity Capital Charge: }
-\begin{align}
- EC(t) =  \alpha S(t)\bar{ B}(t) r_e
-\end{align}
 
 
 \section{ Incremental Profit Definition (CLV): }
@@ -337,5 +401,7 @@ NPV(x(t),r,T)=\sum_{t=1}^T \frac{x(t)}{(1+r)^t}
 \subsection{ Incremental Profit Function: }
 Define the incremental profit function as:
 \begin{align}
-\pi(p)=IP(p) \label{eq:IP}
+\pi(p)=IP(p,r_d,B,T,\theta) \label{eq:IP}
 \end{align}
+
+Given definition (\ref{eq:IP}) we can perform several types of computations. For example, to compute the IRR of a given rate $p$ we set $IP(p,irr,B,T,\theta)=0$. To compute the minimun rate that covers all costs (and risks) and yields a profitability of $r_d$ we set $IP(r^{min},r_d,B,T,\theta)=0$. Notice that given this setup, charging the minimun rate does not mean the lending entity is not making money, it just means we are charging enough to reach a target profitability rate.

@@ -2,18 +2,56 @@
 
 % \title{Inkscape package on Overleaf }
 \chapter{The PricingPy Python Library}
-\subsection{Class Diagram}
+\section{Implementation in vectorial form}
+In the previous chapter we showed the full model and expressed in such a simple final equation that it can be stated directly in vectorial form in Python or any programatic language with support for matrix algebra.
 
+\begin{align}
+T = \begin{bmatrix} 
+    T_{1} & \dots &  T_{m} \\
+    \end{bmatrix}    
+\end{align}
+\begin{align}
+r = \begin{bmatrix} 
+    r_{1} & \dots &  r_{m} \\
+    \end{bmatrix}    
+\end{align}
+\begin{align}
+disb = \begin{bmatrix} 
+    d_{1} & \dots &  d_{m} \\
+    \end{bmatrix}    
+\end{align}
+\begin{align}
+T^{mat} = \begin{bmatrix} 
+     1 & 1 &\dots &  1 \\
+     2 & 2 &\dots &  2 \\
+    \vdots & \vdots &\ddots & \\
+    T^{max} & T^{max} &       & T^{max}
+    \end{bmatrix}       
+\end{align}
+With the definitions above, $\bar{B}$ can be diretly computed using equation (\ref{eq:bbar1}) and array broadcasting operators in numpy:
+
+\begin{align}
+    \bar{B} = disb*\frac{(1+r)^T^{max}-(1+r)^{T^{mat}-1}}{(1+r)^T^{max}-1}
+\end{align}
+With this approach $\bar{B}$ results of order $T^{max}\times m$ as expected.
+\begin{align}
+\bar{B} = \begin{bmatrix} 
+    b_{1,1} & \dots &  b_{1,m} \\
+    \vdots & \ddots & \\
+    b_{T^{max},1} &        & b_{T^{max},m} 
+    \end{bmatrix}    
+\end{align}
+\section{Class Diagram}
 \begin{figure}[H]
   \centering
-      \includegraphics[width=.8\textwidth]{diagrCLV.pdf} 
+      \includegraphics[width=1\textwidth]{diagrCLV.pdf} 
  \caption{CLV Class Diagram}
  \label{fig:Test}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=.8\textwidth]{diagrSklearn.pdf} 
+      \includegraphics[width=.6\textwidth]{diagrSklearn.pdf} 
  \caption{SKLearn Class Diagram}
  \label{fig:Test}
 \end{figure}

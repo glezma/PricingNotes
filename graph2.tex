@@ -26,17 +26,19 @@
 [->,>=stealth',node distance=2.1cm,>=stealth',bend angle=55,auto] 
   \tikzstyle{every state}=[fill=white,draw=black,text=black]
 
-  \node[initial,state] (B)                    {$ B(t)$};
+  \node[state] (B)                    {$ B(t)$};
   \node[state]         (D) [ below right of=B] {$D(t)$};
   \node[state]         (C) [below of=B] {$C(t)$};
   \node[state]         (P) [below left of=B]       {$P(t)$};
   \node[state]         (A) [below of=C] {$A(t),I(t)$};
+  \node[state]         (B1) [right of=A] {$B(t+1)$};
   \path (B) edge              node {} (D)
             edge              node {} (C)
             edge              node {} (P)
         (C) edge              node {} (A)
         (D) edge              node {} (A)
         (P) edge              node {} (A)
+        (A) edge              node {} (B1)
             ;
 \end{tikzpicture}
 \end{document}

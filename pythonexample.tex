@@ -5,22 +5,20 @@ import pandas as pd
 import numpy as np
 import PyPricing as ppr
 
-# Creating temporal curves for probability of default    
-pd_curva = ppr.PDCurva()
-pd_curva = pd_curva.predict(x=[30, 10, 1])
+# Loading Data
+filename = 'inputs.xlsx'
+full_filename = Path('.').resolve() / 'data'/ filename
+X = pd.read_excel(full_filename, sheet_name = 'inputs')
 
-# Creating client object with prop_list and bhv_curves
-prop_list = ppr.PropList(dict_prop)
-prop_list = ppr.PropList(dict_prop)
-client = ppr.Client(name='Nombre', prop_list, bhv_curves)
+# Creating CLV engine to compute CLV   
+eng = ppr.CLVEngine()
+Xtr = eng.transform(X) 
+eng = eng.predict(Xtr) # computes behavioral curves and update all behavioral curves
 
-# Creating product object 
-product = ppr.Product(prop_list)
-product.cInterest(T=70, r=0.02, per=12) # numpy array, series
-product.cBalance(T=70, r=0.02, per=12)
+# Computations
+PV = eng.get_pv()
+RMIN = eng.get_rmin()
+IRR = eng.get_irr()
+SCHED = eng.get_schedule()
 
-# Alternative way to call pd_curva from client and product property list
-pd_curva = pd_curva.predict(client,product)
-
-contract = ppr.Contract(client ,product,dict_terms)
 \end{lstlisting}
