@@ -22,16 +22,16 @@ disb = \begin{bmatrix}
 \end{align}
 \begin{align}
 T^{mat} = \begin{bmatrix} 
-     1 & 1 &\dots &  1 \\
-     2 & 2 &\dots &  2 \\
-    \vdots & \vdots &\ddots & \\
-    T^{max} & T^{max} &       & T^{max}
+     1  \\
+     2  \\
+    \vdots  \\
+    T^{max} 
     \end{bmatrix}       
 \end{align}
 With the definitions above, $\bar{B}$ can be diretly computed using equation (\ref{eq:bbar1}) and array broadcasting operators in numpy:
 
 \begin{align}
-    \bar{B} = disb*\frac{(1+r)^T^{max}-(1+r)^{T^{mat}-1}}{(1+r)^T^{max}-1}
+    \bar{B} = disb*\frac{(1+r)^{T^{max}}-(1+r)^{T^{mat}-1}}{(1+r)^{T^{max}}-1}
 \end{align}
 With this approach $\bar{B}$ results of order $T^{max}\times m$ as expected.
 \begin{align}
