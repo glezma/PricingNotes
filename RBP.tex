@@ -300,26 +300,32 @@ So that we can state that:
 Equation (\ref{eq:model3}) is analogous to equation (\ref{eq:model1}) with an additional term that represents a weighted sum of the last prepayment amounts where the last prepayment has a weight of one. 
 \section{ Terms included in the incremental profit (CLV)}
 \subsection{ Interest on loans: }
+Independently of the model, we saw that $B(t) = S(t-1)\bar{B}(t)$ so given any of the computations graphs we can state.
 \begin{align}
 LI(t) = S(t)\bar{ B}(t)r \label{eq:li}
 \end{align}
-Equation (\ref{eq:li}) will be proved in section (\ref{can}). For now lets just use our intuition and state that each dollar has an unconditional probability to survive up to time $t$ of $S(t)$ 
+
+
 \subsection{  Cost of Funds: }
-This term represents the amount of balance the lender has to finance through the cost of funds $r_c$. 
+This term represents the amount of balance the lender has to finance through the cost of funds $r_c$. We follow the setup suggested by Phillips (2018):
+\begin{align}
+COF(t) = S_c(t)\bar{ B}_c(t)r_c
+\end{align}
+where: 
+\begin{align}
+S_c(t)= \Pi_{s=0}^t [1- p_p(s)-(1-LGD(s))p_d(s) ]
+\end{align}
+This setup assumes that, if the client prepays, the bank also prepays the remaining capital that is owed. If the client defaults, the bank uses the recovered capital (i.e.$(1-LGD(t))$) to make a prepayment to the remaining owed capital and still has to keep making interest payments on the amount defaulted. \\
+
+You can think about this scenario in the following way: At each time, there are three posible state of nature that will determine the remaining balance next period: 1) The client does not default nor prepays with probability $(1-p_p(t)-p_c(t))$, in this case the remaining balance is still B(t), 2) The client prepays with probability $p_p(t)$, thus the bank prepays an the remaining balance and the banks due balance becomes zero, 3) The client defaults with probability $p_d(t)$, thus the bank pays back only $(1-LGD(t) \times  B(t)$ (which means the bank will not need to make interest payments for that capital anymore) but it will still have to make interest payments for the capital amount equal to $LGD(t) \times B(t)$. It follows that the expected value of the remaining balance will be $(1-p_p(t)-(1-LGD(t))p_d(t))B(t)$.
+\footnote{ 
+Observe that if we state
 \begin{align}
     COF(t) = S(t)\bar{B}_c(t)r_c
 \end{align}
-Notice that the ALM unit will have to fund the behavioral expected balance, i.e the remaning balance after deducting prepayments (either full or partial) and defaults. 
-\footnote{ Another valid alternative might be the one suggested by Phillips (2018):
-$
-COF(t) = S_c(t)\bar{ B}_c(t)r_c
-$,
-where: 
-$
-S_c(t)= \Pi_{s=0}^t [1- p_p(s)-(1-LGD(s))p_d(s) ]
-$}
+the ALM unit will have to fund the behavioral expected balance, i.e the remaning balance after deducting prepayments (either full or partial) and defaults. However in this case we would be misssing the interest payments that the ALM has to make for the part that could not be recovered at default (i.e. $LGD(t) \times B(t)$) since it has to payback the borrowed funding  
 
-
+}
 \subsection{ Equity Benefit (Capital Rebate) and Equity Capital Charge: }
 Since any loan has to be financed by both debt and capital, let's assume the fraction of capital the lender has to mantain for each lended dollar is $\alpha_t$. To be consistent with the left and right side of the balance sheet, we need to take into account both the additional revenue of investing the amount of required capital (Equity Benefit) and also the equity charge that the shareholder demands.
 
@@ -347,6 +353,7 @@ SC(t) =  \sigma S(t)
 
 
 \subsection{Recovery costs}
+In case of default the bank recovers an amount of capital equal to $(1-LGD(t)) \times B(t)$ which the bank uses to prepay the funding used to back the loan as we saw in section ()
 \begin{align}
 C(t) = c\times p_d(t) S(t)
 \end{align}
@@ -357,7 +364,7 @@ C(t) = c\times p_d(t) S(t)
 The net present value is given by:
 
 \begin{align}
-NPV(x(t),r,T)=\sum_{t=1}^T \frac{x(t)}{(1+r)^t}
+NPV(x(t),r_d,T)=\sum_{t=1}^T \frac{x(t)}{(1+r_d)^t}
 \end{align}
 
 \renewcommand{\arraystretch}{1.5} % <-- optional a
