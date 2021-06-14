@@ -2,36 +2,12 @@
 \documentclass[12pt]{book}
 \usepackage{listings}
 \usepackage{xcolor}
-
+\usepackage{biblatex}
 \usepackage{amsmath}
 \usepackage{svg}
-%New colors defined below
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
 
-%Code listing style named "mystyle"
-\lstdefinestyle{mystyle}{
-  backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
-  keywordstyle=\color{blue},
-  numberstyle=\tiny\color{codegray},
-  stringstyle=\color{codepurple},
-  basicstyle=\ttfamily\footnotesize,
-  breakatwhitespace=false,         
-  breaklines=true,                 
-  captionpos=b,                    
-  keepspaces=true,                 
-  numbers=left,                    
-  numbersep=5pt,                  
-  showspaces=false,                
-  showstringspaces=false,
-  showtabs=false,                  
-  tabsize=2
-}
-
-% %"mystyle" code listing set
-\lstset{style=mystyle}
+\usepackage{multicol}
+% \usepackage{mathtools}
 \usepackage[margin=1in]{geometry} 
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage{graphicx}
@@ -39,6 +15,17 @@
 \usepackage{blindtext}
 \usepackage{pst-node}
 \usepackage{pdfpages}
+\usepackage{lipsum}
+\usepackage{background}
+\backgroundsetup{
+  position=current page.east,
+  angle=-90,
+  nodeanchor=east,
+  vshift=-5mm,
+  opacity=1,
+  scale=3,
+  contents=Draft. Do not circulate
+}
 
 \usepackage{pst-plot}
 \usepackage{svg}
@@ -61,16 +48,64 @@
 
 \newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
 
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
+  keywordstyle=\color{blue},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,        
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+}
+
+% %"mystyle" code listing set
+\lstset{style=mystyle}
+
+\usepackage{biblatex} %Imports biblatex package
+\addbibresource{references.bib} %Import the bibliography file
+
+
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=red,      
+    urlcolor=cyan,
+    pdftitle={Loan Pricing},
+    pdfpagemode=FullScreen,
+    citecolor=red
+    }
+    
+\urlstyle{same}
+
 \begin{document}
  
 % --------------------------------------------------------------
 %                         Start here
 % --------------------------------------------------------------
  
-\title{Loan Pricing Modeling Notes}
-\author{Last update} %if necessary, replace with your course title
+\title{Loan Pricing Modeling }
+\author{Gonzalo Lezma} %if necessary, replace with your course title
 \maketitle
  
+ \tableofcontents
+ \setcounter{tocdepth}{1}
 % \begin{theorem}{x.yz} %You can use theorem, exercise, problem, or question here.  Modify x.yz to be whatever number you are proving
 % Delete this text and write theorem statement here.
 % \end{theorem}
@@ -81,13 +116,13 @@
 %Note 2: Inside the align environment, you do not want to use $-signs.  The reason for this is that this is already a math environment. This is why we have to include \text{} around any text inside the align environment.
 
 \include{RBP}
-\include{PricingPy}
-\include{pythonexample}
 \include{WTP}
 \include{PriceOpt}
 \include{Survival}
-
-
+\include{ExplainableML}
+\include{PricingPy}
+\include{pythonexample}
+\printbibliography
 
 % --------------------------------------------------------------
 %     You don't have to mess with anything below this line.

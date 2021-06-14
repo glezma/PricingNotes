@@ -3,9 +3,9 @@
 % \title{Inkscape package on Overleaf }
 \chapter{The PricingPy Python Library}
 \section{Implementation in vectorial form}
-In the previous chapter we showed the full model and expressed in such a simple final equation that it can be stated directly in vectorial form in Python or any programatic language with support for matrix algebra.\\
+In the previous chapter we showed the full model and expressed in such a simple final equation that it can be stated directly in vectorial form in Python or any programmatic language with support for matrix algebra.\\
 
-For ilustration purposes, consider the computation given in equation (\ref{eq:bbar1}). To implemet that we will define the following vectors:
+For illustration purposes, consider the computation given in equation (\ref{eq:bbar1}). To implement that we will define the following vectors:
 \begin{align}
 T = \begin{bmatrix} 
     T_{1} & \dots &  T_{m} \\
@@ -43,17 +43,18 @@ With this approach $\bar{B}$ results of order $T^{max}\times m$ as expected.
     \end{bmatrix}    
 \end{align}
 \section{Class Diagram}
+The pattern design is following the pattern detailed in Buitinck et al (2013)  \cite{scikitlearn-2013}. An extraordinary reference is G\'eron (2019) \cite{geron2019}
 \begin{figure}[H]
   \centering
       \includegraphics[width=1\textwidth]{diagrCLV.pdf} 
  \caption{CLV Class Diagram}
- \label{fig:Test}
+ \label{fig:TestCD}
 \end{figure}
 
 \begin{figure}[H]
   \centering
       \includegraphics[width=.6\textwidth]{diagrSklearn.pdf} 
  \caption{SKLearn Class Diagram}
- \label{fig:Test}
+ \label{fig:TestSCD}
 \end{figure}
 

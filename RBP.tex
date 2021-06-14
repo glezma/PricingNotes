@@ -5,11 +5,18 @@ We will start by characterizing the payouts for a constant installment loan unde
 \footnote{The reader familiarized with modern mathematical asset pricing will recognize the similarity of this approach with the typical Q and P measure approach, - i.e. studying first the asset price under a risk neutral world (measure Q) and then connecting with the real world which is non-risk-neutral (P measure) }
 \\
 \\
-The connection between the risk free world and the real world will be established through the theorem of telescopic amortizations in section (1.3). To the best of my knowledge, this theorem has not been established anywhere else but it turns out to be extremely useful for two reasons: First, using this theorem we can easily stablish a closed form mathematical representation of the Economic Profit of a loan from first priciples even allowing for diferent modeling choices for the sequence of computations. 
+The connection between the risk free world and the real world will be established through the theorem of telescopic amortizations in section (1.3). To the best of my knowledge, this theorem has not been established anywhere else but it turns out to be extremely useful for two reasons: First, using this theorem we can easily establish a closed form mathematical representation of the Economic Profit of a loan from first principles even allowing for different modeling choices for the sequence of computations. 
 \\ 
 \\
-Second, the use of the theorem allow for such a simple representation that its programatic implementation does not need any for-loops of any kind, freeing the space for using the vectorization approach that is widely used in data intensive applications in statistics and deep learning.
+Second, the use of the theorem allow for such a simple representation that its programmatic implementation does not need any for-loops of any kind, freeing the space for using the vectorization approach that is widely used in data intensive applications in statistics and deep learning.
 
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=1\textwidth]{ProofDiagram.pdf} 
+ \caption{Vectorial setup}
+ \label{fig:Test2}
+\end{figure}
+Finally lets state some basic notation for rates, discount factors and maturity.
 
 \renewcommand{\arraystretch}{1.5} % <-- optional a
 \begin{center} % <-- optional b
@@ -39,7 +46,7 @@ Setting $\delta=\frac{1}{1+r}$
     \bar{B}(1) &=c\delta[1+\delta+\delta^2+\delta^3+\delta^4+...+\delta^{T-1}] \nonumber \\
     &=c\delta\left[\frac{1}{1-\delta}-\delta^T\frac{1}{1-\delta}\right] =c\delta\left(\frac{1-\delta^T}{1-\delta}\right)
 \end{align}
-Solving for $c$ we stablish the definition for $c_f(r,T)$
+Solving for $c$ we establish the definition for $c_f(r,T)$
 \begin{align}
     c=\bar{B}(1)\left(\frac{1-\delta}{\delta}\right)\frac{1}{1-\delta^T}=B(1)\left[r\frac{(1+r)^T}{(1+r)^T-1}\right]
 \end{align}
@@ -50,10 +57,10 @@ Solving for $c$ we stablish the definition for $c_f(r,T)$
 \subsection{The Balance Function: }
 The Current Balance function $\bar{B}(t)$ is the remaining balance left at time $t-1$ for a loan with principal $B=\bar{B}(1)$ and in absence of any prepayment or default risk \footnote{The acute reader will notice that the definition of $\bar{B}(t)$, in terms of the remaining balance left at time $t-1$ , was given so that we can state such a simple equation for the earned contractual interest $\bar{I}(t)=r\bar{B}(t)$ and eliminate dependence on past indexes $t$.}. For a constant installments loan, the remaining balance at time $t$ for a loan with principal (Balance at t=0) B is given by 
 \begin{align}
-\bar{B}(t)&=B\frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \label{eq:bbar1}
+\bar{B}(t)&=B\frac{(1+r)^T-(1+r)^{t-1}}{(1+r)^T-1} \label{eq:bbar0}
 \end{align}
 
-To establish equation (\ref{eq:bbar1}) we start from first principles noticing that 
+To establish equation (\ref{eq:bbar0}) we start from first principles noticing that 
 the remaining balance is the capitalized previous balance minus the installment 
 
 \begin{align}
@@ -160,7 +167,7 @@ We define de conditional probabilities $p_p(t)$ and $p_d(t)$ $\forall t \in \{1,
    Probability that the loan will default at time t given that it has survived to that point 
    } \nonumber
 \end{align} \noindent
- Given these definitions we can establish $S(t)$, the probability that a loan survives until period $t$ using the pigeon hole priciple. 
+ Given these definitions we can establish $S(t)$, the probability that a loan survives until period $t$ using the pigeon hole principle. 
 \begin{align}
 S(t) & = (1-p_d(1) - p_p(1))\times(1-p_d(2) - p_p(2))\times...\times(1-p_d(t) - p_p(t)) \nonumber\\ 
  & =  \Pi_{s=1}^t (1-p_d(s) - p_p(s))  
@@ -202,7 +209,7 @@ In this model prepayments/full prepayment, default probability are expressed as 
 \captionof{table}{Computation for Model 1: Standard Model} \label{table:1}
 \end{center}
 
-Notice that we defined $B(t)$ as the Loan Balance subject to risk (Conductual affected Loan Balance), as opposed to $\bar{B}(t)$, which is the Risk Free Loan Balance (Contractual Balance).  Given this definitions we can compute the recursive form for the balance function $B(t)$
+Notice that we defined $B(t)$ as the Loan Balance subject to risk (Behavior affected Loan Balance), as opposed to $\bar{B}(t)$, which is the Risk Free Loan Balance (Contractual Balance).  Given this definitions we can compute the recursive form for the balance function $B(t)$
 \begin{align}
 B(t+1) =& B(t)[1-p_d(t)-p_c(t)-p_p(t)-(1-p_d(t)-p_c(t)-p_p(t))A_f(1,r,T-t+1) ] \nonumber\\
      =&
@@ -214,7 +221,7 @@ Notice that (\ref{eq:bbar1}) is a first order equation in difference which can b
 \begin{align}
     B(t) =\prod^{t-1}_{s=1} (1-A_f(1,r,T-s+1))(1-p_d(s)-p_c(s)-p_p(s))B
 \end{align}
-Using theorem (\ref{teo:1}) we can state the conductual balance $B(t)$ as a function of the contractual balance.
+Using theorem (\ref{teo:1}) we can state the behavioral balance $B(t)$ as a function of the contractual balance.
 \begin{align}
     B(t) &=\prod^{t-1}_{s=1} (1-p_d(s)-p_c(s)-p_p(s))\bar{B}(t) \nonumber\\
     &=S(t-1)\bar{B}(t) \nonumber
@@ -233,7 +240,7 @@ Given the interest rate definition in Table (\ref{table:1}) and equation (\ref{e
 \end{corollary}
 
 \subsection{Prepayment dependent on initial balance}
-This model is a variation of the previous one in which the prepayment probabiliy is a proportion of the initial balance/principal $B(1)$. In this setup, the prepayment amount will be define in function of the marginal probability of default $p^m_p(t)$ and not the conditional probability $p_p(t)$ 
+This model is a variation of the previous one in which the prepayment probability is a proportion of the initial balance/principal $B(1)$. In this setup, the prepayment amount will be define in function of the marginal probability of default $p^m_p(t)$ and not the conditional probability $p_p(t)$ 
 \begin{figure}[H]
   \centering
       \includegraphics[width=.3\textwidth]{Graph1.pdf} 
@@ -317,17 +324,17 @@ S_c(t)= \Pi_{s=0}^t [1- p_p(s)-(1-LGD(s))p_d(s) ]
 \end{align}
 This setup assumes that, if the client prepays, the bank also prepays the remaining capital that is owed. If the client defaults, the bank uses the recovered capital (i.e.$(1-LGD(t))$) to make a prepayment to the remaining owed capital and still has to keep making interest payments on the amount defaulted. \\
 
-You can think about this scenario in the following way: At each time, there are three posible state of nature that will determine the remaining balance next period: 1) The client does not default nor prepays with probability $(1-p_p(t)-p_c(t))$, in this case the remaining balance is still B(t), 2) The client prepays with probability $p_p(t)$, thus the bank prepays an the remaining balance and the banks due balance becomes zero, 3) The client defaults with probability $p_d(t)$, thus the bank pays back only $(1-LGD(t) \times  B(t)$ (which means the bank will not need to make interest payments for that capital anymore) but it will still have to make interest payments for the capital amount equal to $LGD(t) \times B(t)$. It follows that the expected value of the remaining balance will be $(1-p_p(t)-(1-LGD(t))p_d(t))B(t)$.
+Think about this scenario in the following way: At each time, there are three possible states of nature that will determine the remaining balance next period: 1) The client does not default nor prepays with probability $(1-p_p(t)-p_c(t))$, in this case the remaining balance is still B(t), 2) The client prepays with probability $p_p(t)$, thus the bank prepays an the remaining balance and the banks due balance becomes zero, 3) The client defaults with probability $p_d(t)$, thus the bank pays back only $(1-LGD(t) \times  B(t)$ (which means the bank will not need to make interest payments for that capital anymore) but it will still have to make interest payments for the capital amount equal to $LGD(t) \times B(t)$. It follows that the expected value of the remaining balance will be $(1-p_p(t)-(1-LGD(t))p_d(t))B(t)$.
 \footnote{ 
 Observe that if we state
 \begin{align}
     COF(t) = S(t)\bar{B}_c(t)r_c
 \end{align}
-the ALM unit will have to fund the behavioral expected balance, i.e the remaning balance after deducting prepayments (either full or partial) and defaults. However in this case we would be misssing the interest payments that the ALM has to make for the part that could not be recovered at default (i.e. $LGD(t) \times B(t)$) since it has to payback the borrowed funding  
+the ALM unit will have to fund the behavioral expected balance, i.e the remaining balance after deducting prepayments (either full or partial) and defaults. However in this case we would be missing the interest payments that the ALM has to make for the part that could not be recovered at default (i.e. $LGD(t) \times B(t)$) since it has to payback the borrowed funding  
 
 }
 \subsection{ Equity Benefit (Capital Rebate) and Equity Capital Charge: }
-Since any loan has to be financed by both debt and capital, let's assume the fraction of capital the lender has to mantain for each lended dollar is $\alpha_t$. To be consistent with the left and right side of the balance sheet, we need to take into account both the additional revenue of investing the amount of required capital (Equity Benefit) and also the equity charge that the shareholder demands.
+Since any loan has to be financed by both debt and capital, let's assume the fraction of capital the lender has to maintain for each lended dollar is $\alpha_t$. To be consistent with the left and right side of the balance sheet, we need to take into account both the additional revenue of investing the amount of required capital (Equity Benefit) and also the equity charge that the shareholder demands.
 
 \begin{align}
 EB(t) = \alpha_t S(t)\bar{ B}(t) r_c
@@ -361,28 +368,24 @@ C(t) = c\times p_d(t) S(t)
 
 
 \section{ Incremental Profit Definition (CLV): }
-The net present value is given by:
-
-\begin{align}
-NPV(x(t),r_d,T)=\sum_{t=1}^T \frac{x(t)}{(1+r_d)^t}
-\end{align}
+Following Phillips 2018 \cite{phillips-2018}. We define the incremental value for a credit as follows:
 
 \renewcommand{\arraystretch}{1.5} % <-- optional a
 \begin{center} % <-- optional b
 \[ % <-- step a
 \begin{array}{|l|c|l|} \hline % <-- steps b, c; optional c, d
 \mbox{Element} & \mbox{Notation} & \mbox{Calculation}\\ \hline
-\mbox{Lending Interest }  & LI & NVP(LI(t),r_d,T)\\
-\mbox{Cost of Funds   }  & COF & NVP(COF(t),r_d,T)\\
-\mbox{Equity benefit }  & EB & NVP(EB(t),r_d,T)\\
-\mbox{Fees }  & LI & NVP(F(t),r_d,T)\\
+\mbox{Lending Interest }  & LI & PV(LI(t),r_d,T)\\
+\mbox{Cost of Funds   }  & COF & PV(COF(t),r_d,T)\\
+\mbox{Equity benefit }  & EB & PV(EB(t),r_d,T)\\
+\mbox{Fees }  & LI & PV(F(t),r_d,T)\\
 \mbox{Ancillary profit }  & A & -\\
 \mbox{Origination cost}  & OC & -\\
 \mbox{Commision  }  & COM & -\\
-\mbox{Servicing Costs}  & SC & NVP(SC(t),r_d,T)\\
-\mbox{Expected Loss }  & EL & NVP(EL(t),r_d,T)\\
-\mbox{Collection costs }  & C & NVP(C(t),r_d,T)\\
-\mbox{Equity charge}  & EC & NVP(EC(t),r_d,T)\\
+\mbox{Servicing Costs}  & SC & PV(SC(t),r_d,T)\\
+\mbox{Expected Loss }  & EL & PV(EL(t),r_d,T)\\
+\mbox{Collection costs }  & C & PV(C(t),r_d,T)\\
+\mbox{Equity charge}  & EC & PV(EC(t),r_d,T)\\
 
 \hline
 \end{array} % <-- step e
@@ -404,6 +407,10 @@ NPV(x(t),r_d,T)=\sum_{t=1}^T \frac{x(t)}{(1+r_d)^t}
 \end{array} % <-- step e
 \] % <-- step e
 \end{center}
+Where 
+\begin{align}
+PV(x(t),r_d,T)=\sum_{t=1}^T \frac{x(t)}{(1+r_d)^t}
+\end{align}
 
 \subsection{ Incremental Profit Function: }
 Define the incremental profit function as:
@@ -411,4 +418,4 @@ Define the incremental profit function as:
 \pi(p)=IP(p,r_d,B,T,\theta) \label{eq:IP}
 \end{align}
 
-Given definition (\ref{eq:IP}) we can perform several types of computations. For example, to compute the IRR of a given rate $p$ we set $IP(p,irr,B,T,\theta)=0$. To compute the minimun rate that covers all costs (and risks) and yields a profitability of $r_d$ we set $IP(r^{min},r_d,B,T,\theta)=0$. Notice that given this setup, charging the minimun rate does not mean the lending entity is not making money, it just means we are charging enough to reach a target profitability rate.
+Given definition (\ref{eq:IP}) we can perform several types of computations. For example, to compute the IRR of a given rate $p$ we set $IP(p,irr,B,T,\theta)=0$. To compute the minimun rate that covers all costs (and risks) and yields a profitability of $r_d$ we set $IP(r^{min},r_d,B,T,\theta)=0$. Notice that given this setup, charging the minimum rate does not mean the lending entity is not making money, it just means we are charging enough to reach a target profitability rate.

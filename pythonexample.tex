@@ -1,9 +1,10 @@
 
 %Python code highlighting
-\begin{lstlisting}[language=Python, caption=Python example]
+\begin{lstlisting}[language=Python, caption=Python API]
 import pandas as pd
 import numpy as np
-import PyPricing as ppr
+import source.engine.CLV_Engine as pricing
+import source.engine.utils as ut
 
 # Loading Data
 filename = 'inputs.xlsx'
@@ -19,6 +20,6 @@ eng = eng.predict(Xtr) # computes behavioral curves and update all behavioral cu
 PV = eng.get_pv()
 RMIN = eng.get_rmin()
 IRR = eng.get_irr()
-SCHED = eng.get_schedule()
+
 
 \end{lstlisting}
